@@ -47,7 +47,7 @@ export default defineConfig(({ mode }) => {
   // to / there even though .env carries the sub-directory base. An explicit
   // VITE_BASE in the environment still wins. scripts/pages.mjs mirrors this.
   const fromEnvFile = process.env.WORKERS_CI ? '' : env.VITE_BASE
-  const base = (process.env.VITE_BASE || fromEnvFile || '/').replace(//*$/, '/')
+  const base = (process.env.VITE_BASE || fromEnvFile || '/').replace(/[/]*$/, '/')
 
   return {
   base,
