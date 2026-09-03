@@ -116,25 +116,30 @@
   will-change: transform;
 }
 
+/* Both shapes carry a faint dark halo so the cursor still reads on the
+   bright frames of the intro film, not only on the near-black page. */
 .cursor__dot-inner {
-  width: 6px; height: 6px;
-  margin: -3px 0 0 -3px;
+  width: 8px; height: 8px;
+  margin: -4px 0 0 -4px;
   border-radius: 50%;
   background: var(--fg);
+  box-shadow: 0 0 0 1px rgba(5, 5, 5, 0.45);
 }
 
 .cursor__ring-inner {
-  width: 42px; height: 42px;
-  margin: -21px 0 0 -21px;
+  width: 44px; height: 44px;
+  margin: -22px 0 0 -22px;
   border-radius: 50%;
-  border: 1px solid rgba(244, 242, 239, 0.55);
+  border: 1.5px solid rgba(244, 242, 239, 0.85);
+  box-shadow: 0 0 0 1px rgba(5, 5, 5, 0.35), inset 0 0 0 1px rgba(5, 5, 5, 0.35);
   display: grid;
   place-items: center;
 }
 
 .cursor__label {
   font-family: var(--font-display);
-  font-size: 9px;
+  font-size: 10px;
+  font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--fg);

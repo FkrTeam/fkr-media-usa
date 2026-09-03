@@ -194,6 +194,8 @@ export default class Intro {
     this.soundBtn.classList.toggle('is-muted', muted)
     this.soundBtn.setAttribute('aria-pressed', muted ? 'true' : 'false')
     this.soundBtn.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off')
+    // The custom cursor fills with this word on hover — see components/cursor.js.
+    this.soundBtn.setAttribute('data-cursor-label', muted ? 'Unmute' : 'Mute')
     if (this.soundLabel) this.soundLabel.textContent = muted ? 'Sound off' : 'Sound on'
   }
 

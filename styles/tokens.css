@@ -122,9 +122,13 @@
      so the nav must stay reachable while the menu is open. */
   --z-menu:     100;
   --z-nav:      200;
-  --z-cursor:   300;
   --z-intro:    400;
   --z-preloader: 500;
+  /* The cursor is the topmost layer, full stop. The native pointer is
+     hidden site-wide, so any overlay above the custom one (the intro film,
+     the preloader) would leave the visitor with no cursor at all — and the
+     sound control lives on the intro. pointer-events: none keeps it inert. */
+  --z-cursor:   600;
 
   /* ---- 9. Runtime ---- */
   --vh: 1vh;

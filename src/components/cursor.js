@@ -63,6 +63,13 @@ export default class Cursor {
       if (!event.relatedTarget) this._reset()
     })
 
+    // A toggle (the intro's sound control) rewrites its label on click, and
+    // the pointer is still resting on it — pick the new word up right away.
+    document.addEventListener('click', (event) => {
+      const target = event.target.closest?.('[data-cursor-label]')
+      if (target) this._expand(target.getAttribute('data-cursor-label'))
+    })
+
     // The cursor must never linger over a page the visitor has left.
     document.addEventListener('pointerleave', () => gsap.to(this.root, { opacity: 0, duration: 0.2 }))
     document.addEventListener('pointerenter', () => gsap.to(this.root, { opacity: 1, duration: 0.2 }))
@@ -70,9 +77,9 @@ export default class Cursor {
 
   _expand(label) {
     gsap.to(this.ringInner, {
-      scale: label ? 1.65 : 1.4,
+      scale: label ? 1.75 : 1.4,
       backgroundColor: label ? CSS.brandSoft : CSS.neutralSoft,
-      borderColor: CSS.brandBorder,
+      borderColor: label ? CSS.brand : CSS.brandBorder,
       duration: 0.4,
       ease: 'power3.out'
     })
