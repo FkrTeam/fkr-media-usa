@@ -57,4 +57,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # The action defaults to wrangler 3, which rejects an assets-only
+          # config ("Missing entry-point"). Assets without a Worker need 4.
+          wranglerVersion: "4.128.0"
           command: deploy
