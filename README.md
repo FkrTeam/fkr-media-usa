@@ -80,23 +80,29 @@ indexed as a duplicate of the real one.
 
 ### Cloudflare — deploys itself from `main`
 
-The Cloudflare Worker at `fkr-media-usa.fkrearth.workers.dev` is **not**
-connected to GitHub through Workers Builds, so a push on its own changes
-nothing there. Instead `.github/workflows/deploy.yml` builds the site with
-`VITE_BASE=/` and runs `wrangler deploy` on every push to `main`. Merge
-to `main`, wait for the green check, done.
+The Worker at `fkr-media-usa.fkrearth.workers.dev` is connected to this
+repository through Cloudflare **Workers Builds** — the same setup as
+`bizimevler-intro`. Push to `main`, Cloudflare notices, builds, deploys.
+There is no GitHub Actions workflow and nothing to run by hand.
 
-It needs two repository secrets, set once under *Settings → Secrets and
-variables → Actions*:
+What the Cloudflare project must have, under *Workers & Pages →
+fkr-media-usa → Settings → Builds*:
 
-| Secret | Where it comes from |
+| Setting | Value |
 |---|---|
-| `CLOUDFLARE_API_TOKEN` | Cloudflare → My Profile → API Tokens → *Create Token* → the **Edit Cloudflare Workers** template |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare → Workers & Pages → overview, right-hand column |
+| Build command | `npm run build` |
+| Deploy command | `npx wrangler deploy` |
+| Build token | any valid one — if it is rolled or deleted, every build fails with "build token … cannot be used" until a new one is selected here |
 
-Without them the workflow fails at the deploy step and the live site simply
-stays as it was. A manual deploy from a machine that has run
-`npx wrangler login` still works exactly as before.
+The base path takes care of itself: inside Workers Builds (`WORKERS_CI`) the
+build defaults to `VITE_BASE=/` even though the committed `.env` says
+`/fkr-media-usa/`, so the domain-root deploy can never pick up the
+sub-directory prefix by accident. A `VITE_BASE` variable set in the
+dashboard still wins if one is ever needed.
+
+`wrangler` is a devDependency for the same reason it is in
+`bizimevler-intro`: Cloudflare's `npx wrangler deploy` then uses the
+pinned v4 from the lockfile instead of fetching whatever is current.
 
 If you upload a build made for `/` into a sub-folder, every stylesheet,
 script and image 404s and the page renders as unstyled text. That is the

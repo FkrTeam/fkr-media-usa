@@ -46,7 +46,16 @@ function readEnv(key, fallback) {
 
 const normaliseBase = (value) => `/${String(value).replace(/^\/+|\/+$/g, '')}/`.replace('//', '/')
 
-const BASE = normaliseBase(readEnv('VITE_BASE', '/'))
+/**
+ * Inside Cloudflare Workers Builds the site is deployed at the domain root,
+ * so the base defaults to / there regardless of what .env says — the
+ * committed .env targets the Apache sub-directory copy. An explicit
+ * VITE_BASE in the environment still wins. vite.config.js mirrors this.
+ */
+const onWorkersBuilds = !!process.env.WORKERS_CI
+const BASE = normaliseBase(
+  process.env.VITE_BASE || (onWorkersBuilds ? '/' : readEnv('VITE_BASE', '/'))
+)
 
 /** Production origin — canonical and social URLs only, never asset paths. */
 const ORIGIN = readEnv('VITE_SITE_URL', 'https://fkrmediausa.com').replace(/\/+$/, '')

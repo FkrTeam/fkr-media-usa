@@ -43,7 +43,11 @@ export default defineConfig(({ mode }) => {
   // wrongly from different depths — the base has to be explicit.
   // Set it once in .env; scripts/pages.mjs reads the same value.
   const env = loadEnv(mode, process.cwd(), '')
-  const base = (env.VITE_BASE || '/').replace(/\/*$/, '/')
+  // Cloudflare Workers Builds (WORKERS_CI) deploys at the domain root: default
+  // to / there even though .env carries the sub-directory base. An explicit
+  // VITE_BASE in the environment still wins. scripts/pages.mjs mirrors this.
+  const fromEnvFile = process.env.WORKERS_CI ? '' : env.VITE_BASE
+  const base = (process.env.VITE_BASE || fromEnvFile || '/').replace(//*$/, '/')
 
   return {
   base,
