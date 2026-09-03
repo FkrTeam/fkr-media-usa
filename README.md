@@ -78,6 +78,26 @@ it deliberately ignores the base. A staging copy at
 `https://fkrmediausa.com/services/`, which is what stops the test site being
 indexed as a duplicate of the real one.
 
+### Cloudflare — deploys itself from `main`
+
+The Cloudflare Worker at `fkr-media-usa.fkrearth.workers.dev` is **not**
+connected to GitHub through Workers Builds, so a push on its own changes
+nothing there. Instead `.github/workflows/deploy.yml` builds the site with
+`VITE_BASE=/` and runs `wrangler deploy` on every push to `main`. Merge
+to `main`, wait for the green check, done.
+
+It needs two repository secrets, set once under *Settings → Secrets and
+variables → Actions*:
+
+| Secret | Where it comes from |
+|---|---|
+| `CLOUDFLARE_API_TOKEN` | Cloudflare → My Profile → API Tokens → *Create Token* → the **Edit Cloudflare Workers** template |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare → Workers & Pages → overview, right-hand column |
+
+Without them the workflow fails at the deploy step and the live site simply
+stays as it was. A manual deploy from a machine that has run
+`npx wrangler login` still works exactly as before.
+
 If you upload a build made for `/` into a sub-folder, every stylesheet,
 script and image 404s and the page renders as unstyled text. That is the
 symptom to recognise.
