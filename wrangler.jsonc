@@ -1,0 +1,32 @@
+{
+  // Cloudflare deploy configuration.
+  //
+  // Without this file wrangler tries to auto-detect a framework, sees Vite,
+  // and demands Vite 6+ so it can install the Cloudflare Vite plugin. That
+  // plugin exists to run a Worker alongside the build — and this project has
+  // no server-side code at all. It is four static HTML documents plus assets.
+  //
+  // Declaring `assets` with no `main` tells wrangler exactly that: upload the
+  // build output, run no Worker. The Vite version stops mattering.
+  //
+  // The build itself must set VITE_BASE=/ in the project's environment
+  // variables. The committed .env targets the Apache sub-directory deploy at
+  // /fkr-media-usa/, and without the override every asset URL would carry
+  // that prefix and 404 at the domain root.
+  "name": "fkr-media-usa",
+  "compatibility_date": "2026-09-03",
+
+  "assets": {
+    "directory": "./dist",
+
+    // Routes ship as real documents (about/index.html), so /about and
+    // /about/ both need to resolve to the same file. This is the default,
+    // stated here because the whole routing model depends on it.
+    "html_handling": "auto-trailing-slash",
+
+    // Not "single-page-application": that would answer every unknown path
+    // with index.html and turn a typo into a 200, which is bad for both
+    // visitors and crawlers. An unknown path should be a 404.
+    "not_found_handling": "none"
+  }
+}
