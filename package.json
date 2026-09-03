@@ -13,7 +13,7 @@
     "pages": "node scripts/pages.mjs",
     "assets": "node scripts/generate-placeholders.mjs",
     "brand": "bash scripts/generate-brand-assets.sh",
-    "intro": "bash scripts/make-intro.sh",
+    "intro": "bash scripts/encode-intro.sh",
     "shots": "node scripts/shots.mjs",
     "postbuild": "node scripts/deploy-note.mjs"
   },

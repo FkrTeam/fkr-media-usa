@@ -130,6 +130,66 @@
 }
 
 /* Discreet skip — appears after ~2.5s, never dominant */
+/* ---- Sound control ----
+   Sits beside the skip button and shares its language, but is visible from
+   the first frame rather than fading in on a delay: if the browser refused
+   audible autoplay, this control IS the fix, and a visitor cannot act on a
+   control they cannot see. */
+.intro__sound {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 44px;
+  padding: var(--sp-2) var(--sp-4);
+  margin-left: auto;
+  margin-right: var(--sp-4);
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: rgba(244, 242, 239, 0.86);
+  border: 1px solid rgba(244, 242, 239, 0.30);
+  background: rgba(5, 5, 5, 0.62);
+  transition: color var(--d-base) var(--e-quick), border-color var(--d-base) var(--e-quick);
+}
+
+.intro__sound:hover,
+.intro__sound:focus-visible {
+  color: var(--fg);
+  border-color: var(--border-raised);
+}
+
+.intro__sound-icon { width: 20px; height: 20px; flex: none; }
+
+/* One icon, two states — the crossed-out strokes and the sound waves swap,
+   so the speaker body never moves. */
+.intro__sound .intro__sound-off { display: none; }
+.intro__sound.is-muted .intro__sound-on { display: none; }
+.intro__sound.is-muted .intro__sound-off { display: inline; }
+
+/* The browser blocked audible autoplay, so the film is playing silently and
+   the visitor has not chosen that. The control says so in the brand red and
+   pulses until it is touched — it is the one thing on screen worth noticing. */
+.intro__sound.is-blocked {
+  color: var(--brand);
+  border-color: var(--border-brand-strong);
+  animation: intro-sound-pulse 2.4s var(--e-out) infinite;
+}
+
+@keyframes intro-sound-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(238, 71, 61, 0.34); }
+  50%      { box-shadow: 0 0 0 6px rgba(238, 71, 61, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro__sound.is-blocked { animation: none; }
+}
+
+@media (max-width: 640px) {
+  .intro__sound { margin-right: var(--sp-3); padding-inline: var(--sp-3); }
+  .intro__sound-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+}
+
 .intro__skip {
   display: inline-flex;
   align-items: center;

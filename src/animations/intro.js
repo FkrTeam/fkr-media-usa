@@ -5,6 +5,9 @@ import { revealLines, EASE } from './transitions.js'
 import { siteData } from '../data/site.js'
 
 const SESSION_KEY = 'fkr:introViewed'
+
+/** The visitor's sound choice, kept across visits — see Intro.soundOff. */
+const SOUND_KEY = 'fkr:introSound'
 const SKIP_DELAY = 2.5      // seconds before the skip control appears
 const PREWARM_LEAD = 5      // seconds before the end that the hero warms up
 const VIDEO_TIMEOUT = 9000  // give up waiting for the film after this
@@ -27,6 +30,8 @@ export default class Intro {
     this.root = qs('[data-intro]')
     this.video = qs('[data-intro-video]')
     this.skipBtn = qs('[data-intro-skip]')
+    this.soundBtn = qs('[data-intro-sound]')
+    this.soundLabel = qs('[data-intro-sound-label]')
     this.timer = qs('[data-intro-timer]')
     this.progress = qs('[data-intro-progress]')
     this.fallbackLine = qs('[data-intro-fallback-line]')
@@ -41,6 +46,29 @@ export default class Intro {
       return sessionStorage.getItem(SESSION_KEY) === 'true'
     } catch {
       return false
+    }
+  }
+
+  /**
+   * The visitor's own choice, remembered across visits.
+   *
+   * Stored rather than assumed because muting a brand film is a deliberate
+   * act — someone who turned it off last time did not mean "just this once".
+   * Absent any stored choice we try sound ON, which is what FKR asked for.
+   */
+  static get soundOff() {
+    try {
+      return localStorage.getItem(SOUND_KEY) === 'off'
+    } catch {
+      return false
+    }
+  }
+
+  static rememberSound(muted) {
+    try {
+      localStorage.setItem(SOUND_KEY, muted ? 'off' : 'on')
+    } catch {
+      /* private mode — the preference simply does not persist */
     }
   }
 
@@ -73,6 +101,7 @@ export default class Intro {
 
   _bind() {
     this.skipBtn?.addEventListener('click', () => this._skip())
+    this.soundBtn?.addEventListener('click', () => this._toggleSound())
 
     this._onKey = (event) => {
       if (event.key === 'Escape' && !this.finished) this._skip()
@@ -99,16 +128,73 @@ export default class Intro {
 
     video.load()
 
+    // Sound on by default, but every current browser refuses to autoplay
+    // audible media until the visitor has interacted with the page. So the
+    // film asks for sound first and accepts muted as the price of playing at
+    // all — a silent film is a far smaller loss than no film. When that
+    // happens the control is flagged so the visitor can see there is sound
+    // to turn on, which is the interaction the browser was waiting for.
+    video.muted = Intro.soundOff
+    video.volume = 1
+
+    let blocked = false
+
     try {
       await video.play()
-      this._playing = true
-      clearTimeout(failsafe)
-      video.classList.add('is-playing')
-    } catch (error) {
-      console.warn('[intro] autoplay blocked or source unplayable', error)
-      clearTimeout(failsafe)
-      this._runFallback()
+    } catch {
+      if (!video.muted) {
+        blocked = true
+        video.muted = true
+        try {
+          await video.play()
+        } catch (error) {
+          console.warn('[intro] autoplay blocked or source unplayable', error)
+          clearTimeout(failsafe)
+          this._runFallback()
+          return
+        }
+      } else {
+        clearTimeout(failsafe)
+        this._runFallback()
+        return
+      }
     }
+
+    this._playing = true
+    clearTimeout(failsafe)
+    video.classList.add('is-playing')
+
+    this._syncSound()
+    if (blocked) this.soundBtn?.classList.add('is-blocked')
+  }
+
+  /**
+   * Flips the film's audio and remembers the choice.
+   *
+   * The click itself is the user gesture browsers require, so unmuting from
+   * here always succeeds even when the initial autoplay attempt was refused.
+   */
+  _toggleSound() {
+    const video = this.video
+    if (!video) return
+
+    video.muted = !video.muted
+    if (!video.muted) video.volume = 1
+
+    Intro.rememberSound(video.muted)
+    this.soundBtn?.classList.remove('is-blocked')
+    this._syncSound()
+  }
+
+  /** Keeps the control's icon, label and assistive state on the same truth. */
+  _syncSound() {
+    const muted = !!this.video?.muted
+    if (!this.soundBtn) return
+
+    this.soundBtn.classList.toggle('is-muted', muted)
+    this.soundBtn.setAttribute('aria-pressed', muted ? 'true' : 'false')
+    this.soundBtn.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off')
+    if (this.soundLabel) this.soundLabel.textContent = muted ? 'Sound off' : 'Sound on'
   }
 
   _onTime() {

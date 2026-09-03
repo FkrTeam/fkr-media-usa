@@ -599,11 +599,14 @@ function renderContactSelects() {
    Intro film sources — shell-level, rendered once
    ══════════════════════════════════════════════════════════════════════ */
 
-export function renderIntroSources({ mobile = false } = {}) {
+export function renderIntroSources({ light = false } = {}) {
   const video = qs('[data-intro-video]')
   if (!video) return
 
-  const sources = mobile ? siteData.intro.mobile : siteData.intro.desktop
+  // `light` is a bandwidth decision made by prefersLightVideo(), not a
+  // viewport one. Source order matters: the browser takes the FIRST type it
+  // can play, so WebM/VP9 is listed ahead of the H.264 fallback.
+  const sources = light ? siteData.intro.mobile : siteData.intro.desktop
   fill(video, sources.map((source) => el('source', { src: asset(source.src), type: source.type })))
   video.setAttribute('poster', asset(siteData.intro.poster))
 }

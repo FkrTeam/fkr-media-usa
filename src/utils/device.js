@@ -31,6 +31,31 @@ export const isTouch = () => mq('(hover: none)').matches || navigator.maxTouchPo
 export const isMobileViewport = () => window.innerWidth < 768
 
 /**
+ * Whether this device should get the smaller cut of the intro film.
+ *
+ * Deliberately NOT `isMobileViewport()`. That threshold is 768px because it
+ * is a layout question, and reusing it here handed the full 1080p file to
+ * every tablet and small laptop — devices that gain nothing from the extra
+ * pixels and often pay for the bytes. The film is a bandwidth question, so
+ * it gets a bandwidth threshold.
+ *
+ * Data Saver wins outright when the browser reports it: a visitor who has
+ * asked for less data has answered this question already, at any width. The
+ * same goes for a connection that reports itself as 2g/3g.
+ */
+export function prefersLightVideo() {
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection
+
+  if (connection) {
+    if (connection.saveData) return true
+    if (/^(slow-)?2g$/.test(connection.effectiveType || '')) return true
+    if (connection.effectiveType === '3g') return true
+  }
+
+  return window.innerWidth < 1024
+}
+
+/**
  * Three quality tiers drive every performance decision.
  *   high   — desktop, plenty of cores, full particle count + post-processing
  *   medium — tablets and modest laptops

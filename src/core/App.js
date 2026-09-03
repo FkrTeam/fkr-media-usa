@@ -7,6 +7,7 @@ import {
   detectTier,
   prefersReducedMotion,
   isMobileViewport,
+  prefersLightVideo,
   onIdle
 } from '../utils/device.js'
 
@@ -58,7 +59,9 @@ export default class App {
     // intro film. resetScroll() is what makes it stick — see its comment.
     if (!location.hash) resetScroll()
 
-    renderIntroSources({ mobile: this.mobile })
+    // The film's cut is chosen on bandwidth, not on layout width — see
+    // prefersLightVideo(). this.mobile stays what it is: a layout answer.
+    renderIntroSources({ light: prefersLightVideo() })
 
     this.preloader = new Preloader({ reducedMotion: this.reducedMotion })
     this.preloader.label('Fonts')

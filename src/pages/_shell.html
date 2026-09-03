@@ -73,7 +73,10 @@
 
   <!-- ═══ Intro film — entry experience only, once per session ═══ -->
   <div class="intro" data-intro hidden>
-    <video class="intro__video" data-intro-video muted playsinline preload="none"
+    <!-- No `muted` attribute: the film tries to start WITH sound and only
+         falls back to muted when the browser refuses. src/animations/intro.js
+         owns that decision — see _startFilm(). -->
+    <video class="intro__video" data-intro-video playsinline preload="none"
            disablepictureinpicture aria-label="FKR Media USA brand film"></video>
     <div class="intro__grade" aria-hidden="true"></div>
 
@@ -82,7 +85,27 @@
     </div>
 
     <div class="intro__hud">
-      <span class="intro__timer" data-intro-timer>00:00 / 00:40</span>
+      <span class="intro__timer" data-intro-timer>00:00 / 00:42</span>
+
+      <button class="intro__sound" type="button" data-intro-sound
+              aria-pressed="false" aria-label="Turn sound off">
+        <svg class="intro__sound-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M3 7.5h3L10.5 4v12L6 12.5H3z" stroke="currentColor" stroke-width="1.4"
+                stroke-linejoin="round" />
+          <g class="intro__sound-on">
+            <path d="M13.5 7.2a4 4 0 0 1 0 5.6" stroke="currentColor" stroke-width="1.4"
+                  stroke-linecap="round" />
+            <path d="M15.8 5a7 7 0 0 1 0 10" stroke="currentColor" stroke-width="1.4"
+                  stroke-linecap="round" />
+          </g>
+          <g class="intro__sound-off">
+            <path d="M14 7.5l4 5M18 7.5l-4 5" stroke="currentColor" stroke-width="1.4"
+                  stroke-linecap="round" />
+          </g>
+        </svg>
+        <span class="intro__sound-label" data-intro-sound-label>Sound on</span>
+      </button>
+
       <button class="intro__skip" type="button" data-intro-skip>
         Skip intro <span class="intro__skip-key">Esc</span>
       </button>

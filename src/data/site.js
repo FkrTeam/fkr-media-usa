@@ -102,7 +102,11 @@ export const siteData = {
       { src: 'media/intro-mobile.mp4', type: 'video/mp4' }
     ],
     poster: 'media/intro-poster.jpg',
-    duration: 40,
+    // Length of the encoded film, and only a fallback: the intro reads
+    // video.duration as soon as metadata arrives and prefers that. It exists
+    // so the timecode and the progress bar have something sane to show in
+    // the moments before the browser has parsed the file.
+    duration: 42,
     fallbackLines: ['Strategy', 'Creativity', 'Technology', 'FKR Media USA']
   }
 }
