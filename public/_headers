@@ -1,0 +1,25 @@
+# Cloudflare Pages cache policy. The Apache equivalent lives in .htaccess;
+# each host ignores the other's file, so both can ship in the same build.
+#
+# Pages already serves HTML as `max-age=0, must-revalidate`, which is what a
+# route document needs — it names the hashed bundle, so a stale one would pin
+# the site to an old build. The rules below are only about what may be
+# cached hard, and why each one is safe to cache that hard.
+
+# Vite writes a content hash into every filename here, so a URL under
+# /assets/ can only ever mean one exact file.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Copied verbatim out of public/, so the path never changes — but every
+# request the app makes for one carries ?v=<hash of public/>, which does.
+/images/*
+  Cache-Control: public, max-age=2592000
+/media/*
+  Cache-Control: public, max-age=2592000
+/brand/*
+  Cache-Control: public, max-age=2592000
+/favicon.png
+  Cache-Control: public, max-age=2592000
+/apple-touch-icon.png
+  Cache-Control: public, max-age=2592000
