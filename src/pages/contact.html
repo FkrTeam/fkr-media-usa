@@ -1,0 +1,134 @@
+<!--@meta
+{
+  "route": "contact",
+  "out": "contact/index.html",
+  "path": "/contact",
+  "title": "Contact FKR Media USA",
+  "description": "Start a project with FKR Media USA. Tell us what you are trying to move and we will take it from there."
+}
+-->
+
+      <!-- ─── Contact hero ─── -->
+      <section class="hero hero--page hero--short" aria-labelledby="contact-hero">
+        <div class="container hero__top">
+          <p class="eyebrow">Contact</p>
+        </div>
+
+        <div class="container">
+          <h1 class="hero__title hero__title--page" id="contact-hero">
+            <span class="line-mask"><span class="line-inner">Let&rsquo;s make</span></span>
+            <span class="line-mask"><span class="line-inner">something people</span></span>
+            <span class="line-mask"><span class="line-inner"><span class="accent-word">notice.</span></span></span>
+          </h1>
+        </div>
+      </section>
+
+      <!-- ─── Enquiry ─── -->
+      <section class="section section--flush enquiry" aria-labelledby="enquiry-title">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">01</span>
+            <h2 class="section-label" id="enquiry-title">Project enquiry</h2>
+          </div>
+
+          <div class="enquiry__layout">
+            <form class="enquiry__form" data-contact-form novalidate>
+              <!-- Honeypot: hidden from people, irresistible to bots -->
+              <div class="enquiry__trap" aria-hidden="true">
+                <label for="company_website">Do not fill this in</label>
+                <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="name">Name <span class="field__req" aria-hidden="true">*</span></label>
+                <input class="field__input" type="text" id="name" name="name" required
+                       autocomplete="name" aria-describedby="name-error" />
+                <p class="field__error" id="name-error" data-error-for="name" role="alert"></p>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="company">Company</label>
+                <input class="field__input" type="text" id="company" name="company"
+                       autocomplete="organization" />
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="email">Email <span class="field__req" aria-hidden="true">*</span></label>
+                <input class="field__input" type="email" id="email" name="email" required
+                       autocomplete="email" inputmode="email" aria-describedby="email-error" />
+                <p class="field__error" id="email-error" data-error-for="email" role="alert"></p>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="phone">Phone <span class="field__hint">optional</span></label>
+                <input class="field__input" type="tel" id="phone" name="phone"
+                       autocomplete="tel" inputmode="tel" />
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="service">Service <span class="field__req" aria-hidden="true">*</span></label>
+                <select class="field__input field__select" id="service" name="service" required
+                        aria-describedby="service-error" data-service-select></select>
+                <p class="field__error" id="service-error" data-error-for="service" role="alert"></p>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="budget">Budget range <span class="field__hint">optional</span></label>
+                <select class="field__input field__select" id="budget" name="budget" data-budget-select></select>
+              </div>
+
+              <div class="field field--wide">
+                <label class="field__label" for="message">Message <span class="field__req" aria-hidden="true">*</span></label>
+                <textarea class="field__input field__textarea" id="message" name="message" rows="6" required
+                          aria-describedby="message-error"
+                          placeholder="What are you trying to move, and by when?"></textarea>
+                <p class="field__error" id="message-error" data-error-for="message" role="alert"></p>
+              </div>
+
+              <div class="enquiry__submit">
+                <button class="btn btn--lg btn--solid" type="submit" data-contact-submit>
+                  <span data-submit-label>Send enquiry</span>
+                  <svg class="btn__arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2 14 L14 2 M6 2 h8 v8" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                </button>
+                <p class="enquiry__status" data-contact-status role="status" aria-live="polite"></p>
+              </div>
+            </form>
+
+            <aside class="enquiry__aside">
+              <div class="enquiry__block" data-reveal="up">
+                <p class="contact__key">Email</p>
+                <p class="contact__val"><a class="link" href="mailto:{{email}}">{{email}}</a></p>
+              </div>
+              <div class="enquiry__block" data-reveal="up">
+                <p class="contact__key">Location</p>
+                <p class="contact__val">{{addressStreet}}<br />{{addressCityRegion}}<br />{{addressCountry}}</p>
+              </div>
+              <div class="enquiry__block" data-reveal="up">
+                <p class="contact__key">Social</p>
+                <p class="contact__val" data-socials></p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Numbers ─── -->
+      <section class="section numbers" aria-labelledby="contact-numbers">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">02</span>
+            <h2 class="section-label" id="contact-numbers">By the numbers</h2>
+          </div>
+          <div class="numbers__grid" data-stats></div>
+        </div>
+      </section>
+
+      <!-- ─── Client filmstrip ─── -->
+      <section class="logostrip" aria-labelledby="contact-clients">
+        <div class="container logostrip__head">
+          <h2 class="section-label" id="contact-clients">Clients</h2>
+        </div>
+        <div class="marquee logostrip__rail" data-marquee="1" data-logostrip></div>
+      </section>

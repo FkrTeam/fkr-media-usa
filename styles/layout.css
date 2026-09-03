@@ -1,0 +1,153 @@
+/* =========================================================
+   LAYOUT — canvas stage, containers, grid, section chrome
+   ========================================================= */
+
+/* Persistent WebGL stage sits behind every DOM layer */
+.webgl {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-canvas);
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* Static fallback painted when WebGL is unavailable */
+.stage-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-canvas);
+  display: none;
+  background:
+    radial-gradient(85% 55% at 24% 6%, rgba(238, 71, 61, 0.14), transparent 58%),
+    radial-gradient(70% 60% at 80% 82%, rgba(238, 71, 61, 0.06), transparent 62%),
+    radial-gradient(120% 90% at 50% 40%, rgba(32, 32, 32, 0.55), transparent 70%),
+    var(--ground);
+}
+.no-webgl .stage-fallback { display: block; }
+.no-webgl .webgl { display: none; }
+
+.site {
+  position: relative;
+  z-index: var(--z-content);
+  opacity: 0;
+}
+
+/* The page ground is a fixed atmospheric wash under the DOM,
+   so sections read as one continuous space, not stacked cards. */
+.site::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--ground);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--narrow { max-width: var(--container-narrow); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--col-gap);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--sp-section);
+}
+
+.section--flush { padding-block-start: 0; }
+
+/* ---- Section chrome: index + label + hairline ---- */
+/* Section chrome: index + label, and the rule that draws itself in. */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-5);
+  padding-bottom: var(--sp-5);
+  margin-bottom: var(--sp-8);
+  border-bottom: var(--hairline);
+}
+
+.section-index {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+
+.section-label {
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+
+/* ---- Shared type utilities ---- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--brand);
+  opacity: 0.7;
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--fg-muted);
+  max-width: 46ch;
+}
+
+.accent { color: var(--brand); }
+
+/* Single-word emphasis. Display type stays warm white; exactly one word
+   per headline carries the brand — that is the whole red budget for a
+   viewport, and it is why the red still registers when it appears. */
+.accent-word { color: var(--brand); }
+
+/* Line-clipping wrapper used by the split-text reveal */
+.line-mask { display: block; overflow: hidden; }
+.line-mask > .line-inner { display: block; will-change: transform; }
+
+/* The section rule is drawn in by scroll rather than simply appearing. */
+.section-head {
+  --rule-scale: 1;
+  border-bottom: 0;
+  position: relative;
+}
+.section-head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--border);
+  transform: scaleX(var(--rule-scale));
+  transform-origin: left;
+}

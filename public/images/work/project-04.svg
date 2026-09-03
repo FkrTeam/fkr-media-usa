@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="base-04" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#242424"/>
+      <stop offset="0.45" stop-color="#333333"/>
+      <stop offset="1" stop-color="#151515"/>
+    </linearGradient>
+    <linearGradient id="ramp-04" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#441614"/>
+      <stop offset="0.5" stop-color="#8B2821"/>
+      <stop offset="1" stop-color="#EE473D"/>
+    </linearGradient>
+    <radialGradient id="halo-04" cx="0.5" cy="0.4" r="0.68">
+      <stop offset="0" stop-color="#F4F2EF" stop-opacity="0.14"/>
+      <stop offset="0.42" stop-color="#2A2A2A" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#0C0C0C" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fade-04" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#050505" stop-opacity="0"/>
+      <stop offset="1" stop-color="#050505" stop-opacity="0.26"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#base-04)"/>
+  <rect width="1600" height="1000" fill="url(#halo-04)"/>
+  <path d="M-60 702.4 C 420 120.0, 1140 1088.0, 1660 170.0" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.220" stroke-width="1.60"/>
+  <path d="M-60 710.1 C 420 144.1, 1140 1073.5, 1660 182.1" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.296" stroke-width="2.19"/>
+  <path d="M-60 717.8 C 420 168.3, 1140 1059.0, 1660 194.1" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.370" stroke-width="2.78"/>
+  <path d="M-60 725.6 C 420 192.4, 1140 1044.6, 1660 206.2" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.444" stroke-width="3.36"/>
+  <path d="M-60 733.3 C 420 216.6, 1140 1030.1, 1660 218.3" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.514" stroke-width="3.91"/>
+  <path d="M-60 741.0 C 420 240.7, 1140 1015.6, 1660 230.3" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.581" stroke-width="4.44"/>
+  <path d="M-60 748.7 C 420 264.8, 1140 1001.1, 1660 242.4" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.644" stroke-width="4.93"/>
+  <path d="M-60 756.5 C 420 289.0, 1140 986.6, 1660 254.5" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.701" stroke-width="5.38"/>
+  <path d="M-60 764.2 C 420 313.1, 1140 972.1, 1660 266.6" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.754" stroke-width="5.79"/>
+  <path d="M-60 771.9 C 420 337.2, 1140 957.7, 1660 278.6" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.799" stroke-width="6.15"/>
+  <path d="M-60 779.6 C 420 361.4, 1140 943.2, 1660 290.7" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.838" stroke-width="6.46"/>
+  <path d="M-60 787.4 C 420 385.5, 1140 928.7, 1660 302.8" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.870" stroke-width="6.71"/>
+  <path d="M-60 795.1 C 420 409.7, 1140 914.2, 1660 314.8" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.894" stroke-width="6.90"/>
+  <path d="M-60 802.8 C 420 433.8, 1140 899.7, 1660 326.9" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.911" stroke-width="7.03"/>
+  <path d="M-60 810.5 C 420 457.9, 1140 885.2, 1660 339.0" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.919" stroke-width="7.09"/>
+  <path d="M-60 818.3 C 420 482.1, 1140 870.8, 1660 351.0" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.919" stroke-width="7.09"/>
+  <path d="M-60 826.0 C 420 506.2, 1140 856.3, 1660 363.1" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.911" stroke-width="7.03"/>
+  <path d="M-60 833.7 C 420 530.3, 1140 841.8, 1660 375.2" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.894" stroke-width="6.90"/>
+  <path d="M-60 841.4 C 420 554.5, 1140 827.3, 1660 387.2" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.870" stroke-width="6.71"/>
+  <path d="M-60 849.2 C 420 578.6, 1140 812.8, 1660 399.3" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.838" stroke-width="6.46"/>
+  <path d="M-60 856.9 C 420 602.8, 1140 798.3, 1660 411.4" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.799" stroke-width="6.15"/>
+  <path d="M-60 864.6 C 420 626.9, 1140 783.9, 1660 423.4" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.754" stroke-width="5.79"/>
+  <path d="M-60 872.3 C 420 651.0, 1140 769.4, 1660 435.5" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.701" stroke-width="5.38"/>
+  <path d="M-60 880.1 C 420 675.2, 1140 754.9, 1660 447.6" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.644" stroke-width="4.93"/>
+  <path d="M-60 887.8 C 420 699.3, 1140 740.4, 1660 459.7" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.581" stroke-width="4.44"/>
+  <path d="M-60 895.5 C 420 723.4, 1140 725.9, 1660 471.7" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.514" stroke-width="3.91"/>
+  <path d="M-60 903.2 C 420 747.6, 1140 711.4, 1660 483.8" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.444" stroke-width="3.36"/>
+  <path d="M-60 911.0 C 420 771.7, 1140 697.0, 1660 495.9" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.370" stroke-width="2.78"/>
+  <path d="M-60 918.7 C 420 795.9, 1140 682.5, 1660 507.9" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.296" stroke-width="2.19"/>
+  <path d="M-60 926.4 C 420 820.0, 1140 668.0, 1660 520.0" fill="none" stroke="url(#ramp-04)" stroke-opacity="0.220" stroke-width="1.60"/>
+  <path d="M-60 872 C 420 660, 1140 620, 1660 435" fill="none" stroke="#F4F2EF" stroke-opacity="0.85" stroke-width="2.6"/>
+  <rect width="1600" height="1000" fill="url(#fade-04)"/>
+</svg>

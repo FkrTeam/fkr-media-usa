@@ -1,0 +1,210 @@
+/* =========================================================
+   COMPONENTS — buttons, links, cursor, marquee, media
+   ========================================================= */
+
+/* ---- Primary CTA: engineered slab, magnetic on desktop ---- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-6);
+  min-height: 52px;
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--fg);
+  border: 1px solid var(--border-raised);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  isolation: isolate;
+  transition: color var(--d-base) var(--e-quick),
+              border-color var(--d-base) var(--e-quick);
+  will-change: transform;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, var(--brand-deep), var(--brand));
+  transform: translateY(101%);
+  transition: transform var(--d-slow) var(--e-out);
+}
+
+.btn:hover, .btn:focus-visible { border-color: transparent; color: var(--bg); }
+.btn:hover::before, .btn:focus-visible::before { transform: translateY(0); }
+
+.btn__arrow {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  transition: transform var(--d-base) var(--e-out);
+}
+.btn:hover .btn__arrow { transform: translateX(4px); }
+
+/* Secondary: neutral by default, brand border on intent. */
+.btn--ghost {
+  background: transparent;
+  border-color: var(--border);
+}
+.btn--ghost:hover,
+.btn--ghost:focus-visible { border-color: var(--border-brand-strong); }
+
+/* Primary: the one place a solid brand fill is the resting state. Reserved
+   for the closing CTA, so it reads as a climax rather than as another
+   red panel. */
+.btn--solid {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--n-950);
+}
+.btn--solid::before { background: var(--brand-hover); }
+.btn--solid:hover,
+.btn--solid:focus-visible { color: var(--n-950); border-color: var(--brand-hover); }
+
+.btn--lg {
+  padding: var(--sp-5) var(--sp-8);
+  min-height: 68px;
+  font-size: var(--fs-sm);
+}
+
+/* ---- Animated underline link ---- */
+.link {
+  position: relative;
+  display: inline-block;
+  padding-block: 2px;
+}
+.link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--d-slow) var(--e-out);
+}
+.link:hover::after, .link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---- Custom cursor (pointer-fine devices only) ----
+   Position lives on the wrapper, scale/colour on the inner shape, so the
+   trailing transform and the hover animation never fight over one property. */
+.cursor {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  display: none;
+  /* Deliberately NOT mix-blend-mode: difference — differencing white
+     against the brand red would invert it straight back to cyan. The
+     cursor states its own colour instead. */
+}
+
+.cursor__dot,
+.cursor__ring {
+  position: absolute;
+  top: 0; left: 0;
+  will-change: transform;
+}
+
+.cursor__dot-inner {
+  width: 6px; height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: var(--fg);
+}
+
+.cursor__ring-inner {
+  width: 42px; height: 42px;
+  margin: -21px 0 0 -21px;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 242, 239, 0.55);
+  display: grid;
+  place-items: center;
+}
+
+.cursor__label {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+html.has-cursor .cursor { display: block; }
+html.has-cursor,
+html.has-cursor a,
+html.has-cursor button { cursor: none; }
+
+/* ---- Arrow link ---- */
+.link--arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+}
+.link--arrow svg {
+  width: 13px;
+  height: 13px;
+  transition: transform var(--d-base) var(--e-out);
+}
+.link--arrow:hover svg,
+.link--arrow:focus-visible svg { transform: translate(3px, -3px); }
+.link--arrow:hover, .link--arrow:focus-visible { color: var(--brand); }
+
+/* ---- Route transition curtain ----
+   A single sheet that wipes up and then away, so no route change ever
+   shows a white flash or an empty frame. */
+.curtain {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-nav) + 5);
+  background: var(--n-950);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  pointer-events: none;
+  will-change: transform;
+}
+.curtain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 46% at 50% 100%, rgba(238, 71, 61, 0.16), transparent 62%);
+}
+
+/* ---- Media frame with subtle reveal scale ---- */
+.media {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-raised);
+}
+.media > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.04);
+  transition: transform var(--d-cine) var(--e-out);
+}
+.media:hover > img { transform: scale(1.0); }
+
+/* ---- Hairline rule ---- */
+.rule {
+  height: 1px;
+  background: var(--border);
+  border: 0;
+  margin: 0;
+}

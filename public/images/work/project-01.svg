@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="base-01" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#242424"/>
+      <stop offset="0.45" stop-color="#333333"/>
+      <stop offset="1" stop-color="#151515"/>
+    </linearGradient>
+    <linearGradient id="ramp-01" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#441614"/>
+      <stop offset="0.5" stop-color="#8B2821"/>
+      <stop offset="1" stop-color="#EE473D"/>
+    </linearGradient>
+    <radialGradient id="halo-01" cx="0.5" cy="0.4" r="0.68">
+      <stop offset="0" stop-color="#F4F2EF" stop-opacity="0.14"/>
+      <stop offset="0.42" stop-color="#2A2A2A" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#0C0C0C" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fade-01" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#050505" stop-opacity="0"/>
+      <stop offset="1" stop-color="#050505" stop-opacity="0.26"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#base-01)"/>
+  <rect width="1600" height="1000" fill="url(#halo-01)"/>
+  <rect width="1600" height="500" fill="#0C0C0C" fill-opacity="0.5"/>
+  <path d="M260 500 L1340 500" stroke="#F4F2EF" stroke-opacity="0.162" stroke-width="1.40"/>
+  <path d="M248 502 L1352 502" stroke="#F4F2EF" stroke-opacity="0.185" stroke-width="1.55"/>
+  <path d="M235 506 L1365 506" stroke="#F4F2EF" stroke-opacity="0.209" stroke-width="1.70"/>
+  <path d="M223 514 L1377 514" stroke="#F4F2EF" stroke-opacity="0.233" stroke-width="1.86"/>
+  <path d="M210 523 L1390 523" stroke="#F4F2EF" stroke-opacity="0.257" stroke-width="2.01"/>
+  <path d="M198 535 L1402 535" stroke="#F4F2EF" stroke-opacity="0.280" stroke-width="2.16"/>
+  <path d="M186 549 L1414 549" stroke="#F4F2EF" stroke-opacity="0.303" stroke-width="2.31"/>
+  <path d="M173 566 L1427 566" stroke="#F4F2EF" stroke-opacity="0.327" stroke-width="2.47"/>
+  <path d="M161 584 L1439 584" stroke="#F4F2EF" stroke-opacity="0.351" stroke-width="2.62"/>
+  <path d="M149 604 L1451 604" stroke="#F4F2EF" stroke-opacity="0.374" stroke-width="2.77"/>
+  <path d="M136 627 L1464 627" stroke="#F4F2EF" stroke-opacity="0.398" stroke-width="2.92"/>
+  <path d="M124 651 L1476 651" stroke="#F4F2EF" stroke-opacity="0.421" stroke-width="3.08"/>
+  <path d="M111 678 L1489 678" stroke="#F4F2EF" stroke-opacity="0.445" stroke-width="3.23"/>
+  <path d="M99 706 L1501 706" stroke="#F4F2EF" stroke-opacity="0.468" stroke-width="3.38"/>
+  <path d="M87 736 L1513 736" stroke="#F4F2EF" stroke-opacity="0.492" stroke-width="3.53"/>
+  <path d="M74 768 L1526 768" stroke="#F4F2EF" stroke-opacity="0.516" stroke-width="3.69"/>
+  <path d="M62 802 L1538 802" stroke="#F4F2EF" stroke-opacity="0.539" stroke-width="3.84"/>
+  <path d="M50 838 L1550 838" stroke="#F4F2EF" stroke-opacity="0.563" stroke-width="3.99"/>
+  <path d="M37 876 L1563 876" stroke="#F4F2EF" stroke-opacity="0.586" stroke-width="4.14"/>
+  <path d="M25 915 L1575 915" stroke="#F4F2EF" stroke-opacity="0.610" stroke-width="4.30"/>
+  <path d="M12 957 L1588 957" stroke="#F4F2EF" stroke-opacity="0.634" stroke-width="4.45"/>
+  <path d="M0 1000 L1600 1000" stroke="#F4F2EF" stroke-opacity="0.657" stroke-width="4.60"/>
+  <path d="M100 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M217 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M334 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M451 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M568 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M685 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M802 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M919 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M1036 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M1153 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M1270 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M1387 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <path d="M1504 1000 L800 500" stroke="#EE473D" stroke-opacity="0.30" stroke-width="1.4"/>
+  <ellipse cx="800" cy="500" rx="560" ry="120" fill="#F4F2EF" fill-opacity="0.10"/>
+  <ellipse cx="800" cy="500" rx="300" ry="52" fill="#EE473D" fill-opacity="0.38"/>
+  <path d="M120 500 L1480 500" stroke="#FFE3DF" stroke-opacity="0.95" stroke-width="3"/>
+  <rect width="1600" height="1000" fill="url(#fade-01)"/>
+</svg>

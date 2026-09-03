@@ -1,0 +1,149 @@
+<!--@meta
+{
+  "route": "services",
+  "out": "services/index.html",
+  "path": "/services",
+  "title": "FKR Media USA — Services",
+  "description": "Digital advertising, social media, SEO, web design and development, branding and content production. Strategy, creative and technology delivered as one practice."
+}
+-->
+
+      <!-- ─── Services hero ─── -->
+      <section class="hero hero--page" aria-labelledby="services-hero">
+        <div class="container hero__top">
+          <p class="eyebrow">Services</p>
+        </div>
+
+        <div class="container">
+          <h1 class="hero__title hero__title--page" id="services-hero">
+            <span class="line-mask"><span class="line-inner">Strategy. Creative.</span></span>
+            <span class="line-mask"><span class="line-inner">Technology. <span class="accent-word">Growth.</span></span></span>
+          </h1>
+
+          <div class="hero__foot">
+            <p class="hero__intro lead" data-reveal="up">
+              Six disciplines run by one team against one measurement model. Nothing is
+              handed across an agency boundary and quietly downgraded on the way.
+            </p>
+            <p class="hero__scroll" data-reveal="fade">
+              <span class="hero__scroll-line" data-hero-scroll-line aria-hidden="true"></span>
+              Scroll for detail
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Client filmstrip ─── -->
+      <section class="logostrip" aria-labelledby="services-clients">
+        <div class="container logostrip__head">
+          <h2 class="section-label" id="services-clients">Clients</h2>
+        </div>
+        <div class="marquee logostrip__rail" data-marquee="1" data-logostrip></div>
+      </section>
+
+      <!-- ─── Overview ─── -->
+      <section class="section services-overview" aria-labelledby="overview-title">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">01</span>
+            <h2 class="section-label" id="overview-title">Overview</h2>
+          </div>
+
+          <p class="services-overview__statement" data-split-lines>
+            We are hired when the work has to hold together across every surface at once.
+          </p>
+
+          <div class="services-overview__grid" data-services-overview></div>
+        </div>
+      </section>
+
+      <!-- ─── Service detail ─── -->
+      <section class="section section--flush services-detail" aria-labelledby="detail-title">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">02</span>
+            <h2 class="section-label" id="detail-title">Capabilities</h2>
+          </div>
+        </div>
+
+        <div class="container services-detail__layout">
+          <!-- Sticky index tracks the section in view -->
+          <nav class="services-detail__index" data-detail-index aria-label="Service sections">
+            <ol data-detail-index-list></ol>
+            <div class="services-detail__rail" aria-hidden="true"><span data-detail-progress></span></div>
+          </nav>
+
+          <div class="services-detail__body" data-services-detail></div>
+        </div>
+      </section>
+
+      <!-- ─── Process ─── -->
+      <section class="section process" aria-labelledby="process-title">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">03</span>
+            <h2 class="section-label" id="process-title">How we work</h2>
+          </div>
+          <ol class="process__list" data-process></ol>
+        </div>
+      </section>
+
+      <!-- ─── Why FKR ─── -->
+      <section class="section propositions" aria-labelledby="why-title">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">04</span>
+            <h2 class="section-label" id="why-title">Why FKR</h2>
+          </div>
+          <div class="propositions__grid" data-propositions></div>
+        </div>
+      </section>
+
+      <!-- ─── Numbers ─── -->
+      <section class="section numbers" aria-labelledby="services-numbers">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">05</span>
+            <h2 class="section-label" id="services-numbers">By the numbers</h2>
+          </div>
+          <div class="numbers__grid" data-stats></div>
+        </div>
+      </section>
+
+      <!-- ─── Client reviews ─── -->
+      <section class="section reviews" aria-labelledby="services-reviews">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">06</span>
+            <h2 class="section-label" id="services-reviews">Client reviews</h2>
+          </div>
+
+          <div class="reviews__summary" data-reviews-summary hidden></div>
+
+          <ul class="reviews__grid" data-reviews-track></ul>
+        </div>
+      </section>
+
+      <!-- ─── Contact CTA ─── -->
+      <section class="section contact-cta" aria-labelledby="services-cta">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">07</span>
+            <h2 class="section-label">Contact</h2>
+          </div>
+
+          <p class="contact-cta__title" id="services-cta" data-split-lines>
+            Tell us what you are trying to move.
+          </p>
+
+          <div class="contact-cta__actions">
+            <a class="btn btn--lg btn--solid" href="/contact" data-route-link data-magnetic>
+              Start a project
+              <svg class="btn__arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M2 14 L14 2 M6 2 h8 v8" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+            </a>
+            <a class="link" href="mailto:{{email}}">{{email}}</a>
+          </div>
+        </div>
+      </section>

@@ -1,0 +1,27 @@
+{
+  "name": "fkr-media-usa",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "FKR Media USA — cinematic WebGL creative agency experience.",
+  "scripts": {
+    "predev": "node scripts/pages.mjs",
+    "dev": "vite",
+    "prebuild": "node scripts/pages.mjs",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "pages": "node scripts/pages.mjs",
+    "assets": "node scripts/generate-placeholders.mjs",
+    "brand": "bash scripts/generate-brand-assets.sh",
+    "intro": "bash scripts/make-intro.sh",
+    "shots": "node scripts/shots.mjs",
+    "postbuild": "node scripts/deploy-note.mjs"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}

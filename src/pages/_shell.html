@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#050505" />
+
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}" />
+  <link rel="canonical" href="{{canonical}}" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="FKR Media USA" />
+  <meta property="og:title" content="{{title}}" />
+  <meta property="og:description" content="{{description}}" />
+  <meta property="og:url" content="{{canonical}}" />
+  <meta property="og:image" content="{{origin}}images/og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{title}}" />
+  <meta name="twitter:description" content="{{description}}" />
+  <meta name="twitter:image" content="{{origin}}images/og.jpg" />
+
+  <link rel="icon" href="/favicon.png{{v}}" type="image/png" sizes="512x512" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png{{v}}" />
+
+  <script>
+    /* Set before first paint so the CSS knows JS is driving the experience. */
+    document.documentElement.classList.add('js')
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "FKR Media USA",
+      "url": "{{origin}}",
+      "logo": "{{origin}}brand/fkr-media-usa-logo.png",
+      "description": "Creative technology and digital media agency.",
+      "email": "{{email}}",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{addressStreet}}",
+        "addressLocality": "{{addressCity}}",
+        "addressRegion": "{{addressRegion}}",
+        "postalCode": "{{addressPostal}}",
+        "addressCountry": "{{addressCountryCode}}"
+      },
+      "sameAs": {{sameAs}}
+    }
+  </script>
+
+  <link rel="stylesheet" href="/styles/main.css" />
+</head>
+
+<body data-route="{{route}}">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ═══ Preloader ═══ -->
+  <div class="preloader" data-preloader role="status" aria-live="polite" aria-label="Loading FKR Media USA">
+    <div class="preloader__inner">
+      <img class="preloader__mark" data-preloader-mark src="/brand/fkr-mark.png{{v}}"
+           width="842" height="300" alt="" />
+      <div class="preloader__bar"><span class="preloader__fill" data-preloader-fill></span></div>
+      <div class="preloader__meta">
+        <span data-preloader-stage>Initialising</span>
+        <span class="preloader__pct" data-preloader-pct>0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Intro film — entry experience only, once per session ═══ -->
+  <div class="intro" data-intro hidden>
+    <video class="intro__video" data-intro-video muted playsinline preload="none"
+           disablepictureinpicture aria-label="FKR Media USA brand film"></video>
+    <div class="intro__grade" aria-hidden="true"></div>
+
+    <div class="intro__fallback" aria-hidden="true">
+      <p class="intro__fallback-line" data-intro-fallback-line></p>
+    </div>
+
+    <div class="intro__hud">
+      <span class="intro__timer" data-intro-timer>00:00 / 00:40</span>
+      <button class="intro__skip" type="button" data-intro-skip>
+        Skip intro <span class="intro__skip-key">Esc</span>
+      </button>
+    </div>
+    <div class="intro__progress"><span data-intro-progress></span></div>
+  </div>
+
+  <!-- ═══ Persistent WebGL stage — survives every route change ═══ -->
+  <canvas class="webgl" data-canvas aria-hidden="true"></canvas>
+  <div class="stage-fallback" aria-hidden="true"></div>
+
+  <!-- ═══ Custom cursor (pointer-fine only) ═══ -->
+  <div class="cursor" data-cursor aria-hidden="true">
+    <div class="cursor__ring" data-cursor-ring>
+      <div class="cursor__ring-inner" data-cursor-ring-inner>
+        <span class="cursor__label" data-cursor-label></span>
+      </div>
+    </div>
+    <div class="cursor__dot" data-cursor-dot><div class="cursor__dot-inner" data-cursor-dot-inner></div></div>
+  </div>
+
+  <!-- ═══ Route transition curtain ═══ -->
+  <div class="curtain" data-curtain aria-hidden="true"></div>
+
+  <!-- ═══ Navigation ═══ -->
+  <header class="nav" data-nav>
+    <a class="nav__brand" href="/" data-route-link aria-label="FKR Media USA — home">
+      <img class="nav__logo" src="/brand/fkr-mark.png{{v}}" width="842" height="300"
+           alt="FKR Media USA" />
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <a class="nav__link" href="/" data-route-link data-nav-link>Home</a>
+      <a class="nav__link" href="/services" data-route-link data-nav-link>Services</a>
+      <a class="nav__link" href="/about" data-route-link data-nav-link>About</a>
+      <a class="nav__link" href="/contact" data-route-link data-nav-link>Contact</a>
+    </nav>
+
+    <a class="btn nav__cta" href="/contact" data-route-link data-magnetic>
+      Start a project
+      <svg class="btn__arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M2 14 L14 2 M6 2 h8 v8" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+    </a>
+
+    <button class="nav__toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu">
+      <span data-menu-label>Menu</span>
+      <span class="nav__toggle-bars" aria-hidden="true"><span></span><span></span></span>
+    </button>
+  </header>
+
+  <!-- ═══ Fullscreen mobile menu ═══ -->
+  <nav class="menu" id="mobile-menu" data-menu aria-label="Mobile" inert>
+    <ul class="menu__list">
+      <li class="menu__item"><a class="menu__link" href="/" data-route-link data-menu-link data-nav-link><span class="menu__num">01</span><span class="menu__text">Home</span></a></li>
+      <li class="menu__item"><a class="menu__link" href="/services" data-route-link data-menu-link data-nav-link><span class="menu__num">02</span><span class="menu__text">Services</span></a></li>
+      <li class="menu__item"><a class="menu__link" href="/about" data-route-link data-menu-link data-nav-link><span class="menu__num">03</span><span class="menu__text">About</span></a></li>
+      <li class="menu__item"><a class="menu__link" href="/contact" data-route-link data-menu-link data-nav-link><span class="menu__num">04</span><span class="menu__text">Contact</span></a></li>
+    </ul>
+    <div class="menu__foot" data-menu-foot>
+      <a class="link" href="mailto:{{email}}">{{email}}</a>
+      <span>{{addressShort}}</span>
+    </div>
+  </nav>
+
+  <!-- ═══ Site ═══ -->
+  <div class="site" data-site id="top">
+    <main id="main" data-page="{{route}}">
+{{body}}
+    </main>
+
+    <!-- ═══ Footer ═══ -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <a class="footer__brand" href="/" data-route-link aria-label="FKR Media USA — home">
+            <img class="footer__lockup" src="/brand/fkr-media-logo-new-white.png{{v}}"
+                 width="1682" height="385" alt="FKR Media USA" />
+          </a>
+
+          <nav class="footer__nav" aria-label="Footer">
+            <p class="footer__key">Pages</p>
+            <ul>
+              <li><a class="link" href="/" data-route-link>Home</a></li>
+              <li><a class="link" href="/services" data-route-link>Services</a></li>
+              <li><a class="link" href="/about" data-route-link>About</a></li>
+              <li><a class="link" href="/contact" data-route-link>Contact</a></li>
+            </ul>
+          </nav>
+
+          <div class="footer__col">
+            <p class="footer__key">Contact</p>
+            <ul>
+              <li><a class="link" href="mailto:{{email}}">{{email}}</a></li>
+              <li><span class="footer__muted">{{addressLine}}</span></li>
+            </ul>
+          </div>
+
+          <div class="footer__col">
+            <p class="footer__key">Social</p>
+            <ul data-footer-socials></ul>
+          </div>
+        </div>
+
+        <div class="footer__row">
+          <p class="footer__legal">
+            <span>&copy; <span data-year>2026</span> FKR Media USA</span>
+            <span>All rights reserved</span>
+          </p>
+          <a class="footer__top" href="#top">
+            Back to top
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 14 V2 M3 7 L8 2 L13 7" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

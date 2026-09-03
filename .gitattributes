@@ -1,0 +1,18 @@
+# Normalise line endings in the repository. Without this, a commit made on
+# Windows stores CRLF and every file looks rewritten to anyone on macOS or
+# Linux. Text is stored as LF and checked out however the platform wants.
+* text=auto eol=lf
+
+# Never touched: line-ending conversion would corrupt them.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.ico   binary
+*.mp4  binary
+*.webm binary
+*.woff2 binary
+*.zip  binary
+
+# Generated and noisy in review; still diffable on request.
+package-lock.json linguist-generated=true -diff

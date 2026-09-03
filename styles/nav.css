@@ -1,0 +1,176 @@
+/* =========================================================
+   NAVIGATION — floating bar + fullscreen mobile menu
+   ========================================================= */
+
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
+  height: var(--nav-h);
+  padding-inline: var(--gutter);
+  transform: translateY(-101%);
+  transition: height var(--d-slow) var(--e-out),
+              background-color var(--d-slow) var(--e-out),
+              border-color var(--d-slow) var(--e-out);
+  border-bottom: 1px solid transparent;
+}
+
+/* Compact state: the bar tightens and a thin membrane appears —
+   a single hairline, not a frosted card. */
+.nav.is-compact {
+  height: calc(var(--nav-h) - 20px);
+  background: rgba(5, 5, 5, 0.62);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom-color: var(--border);
+}
+
+.nav.is-hidden { transform: translateY(-101%) !important; }
+
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex: none;
+}
+/* The compact mark: the red FKR portion of the official lockup, used
+   wherever the black MEDIA wordmark would sit on a dark ground. */
+.nav__logo {
+  width: clamp(74px, 6.4vw, 96px);
+  height: auto;
+  display: block;
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.4vw, 2.5rem);
+  margin-left: auto;
+}
+
+.nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  transition: color var(--d-base) var(--e-quick);
+}
+.nav__link::before {
+  content: '';
+  width: 4px; height: 4px;
+  background: var(--brand);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity var(--d-base) var(--e-quick), transform var(--d-base) var(--e-out);
+}
+.nav__link:hover,
+.nav__link:focus-visible,
+.nav__link.is-active { color: var(--fg); }
+.nav__link.is-active::before { opacity: 1; transform: scale(1); }
+
+.nav__cta { flex: none; margin-left: var(--sp-5); }
+
+/* ---- Mobile trigger ---- */
+.nav__toggle {
+  display: none;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 44px;
+  min-width: 44px;
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--fg);
+}
+.nav__toggle-bars {
+  position: relative;
+  width: 26px;
+  height: 10px;
+  flex: none;
+}
+.nav__toggle-bars span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transition: transform var(--d-base) var(--e-out), opacity var(--d-fast) linear;
+}
+.nav__toggle-bars span:first-child { top: 0; }
+.nav__toggle-bars span:last-child { bottom: 0; }
+.nav__toggle[aria-expanded='true'] .nav__toggle-bars span:first-child { transform: translateY(4.5px) rotate(45deg); }
+.nav__toggle[aria-expanded='true'] .nav__toggle-bars span:last-child { transform: translateY(-4.5px) rotate(-45deg); }
+
+/* ---- Fullscreen menu ---- */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-menu);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--nav-h) + var(--sp-6)) var(--gutter) var(--sp-8);
+  background: linear-gradient(180deg, var(--n-850) 0%, var(--bg) 68%);
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+}
+.menu.is-open { visibility: visible; }
+
+.menu__list { display: flex; flex-direction: column; gap: var(--sp-2); }
+
+.menu__item { overflow: hidden; }
+
+.menu__link {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-4);
+  padding-block: var(--sp-3);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 12vw, 5rem);
+  font-weight: 500;
+  letter-spacing: var(--tr-display);
+  line-height: 1.02;
+  color: var(--fg);
+  transform: translateY(110%);
+}
+.menu__num {
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+.menu__link:hover .menu__text,
+.menu__link:focus-visible .menu__text { color: var(--brand); }
+.menu__text { transition: color var(--d-base) var(--e-quick); }
+
+.menu__foot {
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-5);
+  border-top: var(--hairline);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-5) var(--sp-7);
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+  opacity: 0;
+}
+
+@media (max-width: 1024px) {
+  .nav__links, .nav__cta { display: none; }
+  .nav__toggle { display: inline-flex; }
+}
+
+@media (min-width: 1025px) {
+  .menu { display: none; }
+}

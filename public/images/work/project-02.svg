@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="base-02" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#242424"/>
+      <stop offset="0.45" stop-color="#333333"/>
+      <stop offset="1" stop-color="#151515"/>
+    </linearGradient>
+    <linearGradient id="ramp-02" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#441614"/>
+      <stop offset="0.5" stop-color="#8B2821"/>
+      <stop offset="1" stop-color="#EE473D"/>
+    </linearGradient>
+    <radialGradient id="halo-02" cx="0.5" cy="0.4" r="0.68">
+      <stop offset="0" stop-color="#F4F2EF" stop-opacity="0.14"/>
+      <stop offset="0.42" stop-color="#2A2A2A" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#0C0C0C" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fade-02" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#050505" stop-opacity="0"/>
+      <stop offset="1" stop-color="#050505" stop-opacity="0.26"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#base-02)"/>
+  <rect width="1600" height="1000" fill="url(#halo-02)"/>
+  <g>
+    <path d="M0.0 90 L-1280.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M53.3 90 L-1141.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M106.7 90 L-1002.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M160.0 90 L-864.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M213.3 90 L-725.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M266.7 90 L-586.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M320.0 90 L-448.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M373.3 90 L-309.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M426.7 90 L-170.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M480.0 90 L-32.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M533.3 90 L106.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M586.7 90 L245.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M640.0 90 L384.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M693.3 90 L522.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M746.7 90 L661.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M800.0 90 L800.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M853.3 90 L938.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M906.7 90 L1077.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M960.0 90 L1216.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1013.3 90 L1354.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1066.7 90 L1493.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1120.0 90 L1632.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1173.3 90 L1770.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1226.7 90 L1909.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1280.0 90 L2048.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1333.3 90 L2186.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1386.7 90 L2325.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1440.0 90 L2464.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1493.3 90 L2602.6 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1546.7 90 L2741.4 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M1600.0 90 L2880.0 1000" stroke="#F4F2EF" stroke-opacity="0.30" stroke-width="1.4"/>
+    <path d="M0 90.0 L1600 90.0" stroke="#8B2821" stroke-opacity="0.140" stroke-width="1.00"/>
+    <path d="M0 92.5 L1600 92.5" stroke="#8B2821" stroke-opacity="0.162" stroke-width="1.11"/>
+    <path d="M0 100.1 L1600 100.1" stroke="#8B2821" stroke-opacity="0.184" stroke-width="1.21"/>
+    <path d="M0 112.7 L1600 112.7" stroke="#8B2821" stroke-opacity="0.206" stroke-width="1.32"/>
+    <path d="M0 130.3 L1600 130.3" stroke="#8B2821" stroke-opacity="0.228" stroke-width="1.42"/>
+    <path d="M0 153.0 L1600 153.0" stroke="#8B2821" stroke-opacity="0.251" stroke-width="1.53"/>
+    <path d="M0 180.7 L1600 180.7" stroke="#8B2821" stroke-opacity="0.273" stroke-width="1.63"/>
+    <path d="M0 213.5 L1600 213.5" stroke="#8B2821" stroke-opacity="0.295" stroke-width="1.74"/>
+    <path d="M0 251.3 L1600 251.3" stroke="#8B2821" stroke-opacity="0.317" stroke-width="1.84"/>
+    <path d="M0 294.2 L1600 294.2" stroke="#8B2821" stroke-opacity="0.339" stroke-width="1.95"/>
+    <path d="M0 342.1 L1600 342.1" stroke="#8B2821" stroke-opacity="0.361" stroke-width="2.05"/>
+    <path d="M0 395.0 L1600 395.0" stroke="#8B2821" stroke-opacity="0.383" stroke-width="2.16"/>
+    <path d="M0 453.0 L1600 453.0" stroke="#8B2821" stroke-opacity="0.405" stroke-width="2.26"/>
+    <path d="M0 516.0 L1600 516.0" stroke="#8B2821" stroke-opacity="0.427" stroke-width="2.37"/>
+    <path d="M0 584.1 L1600 584.1" stroke="#8B2821" stroke-opacity="0.449" stroke-width="2.47"/>
+    <path d="M0 657.2 L1600 657.2" stroke="#8B2821" stroke-opacity="0.472" stroke-width="2.58"/>
+    <path d="M0 735.3 L1600 735.3" stroke="#8B2821" stroke-opacity="0.494" stroke-width="2.68"/>
+    <path d="M0 818.5 L1600 818.5" stroke="#8B2821" stroke-opacity="0.516" stroke-width="2.79"/>
+    <path d="M0 906.7 L1600 906.7" stroke="#8B2821" stroke-opacity="0.538" stroke-width="2.89"/>
+    <path d="M0 1000.0 L1600 1000.0" stroke="#8B2821" stroke-opacity="0.560" stroke-width="3.00"/>
+  </g>
+  <rect x="600" y="90" width="400" height="910" fill="url(#ramp-02)" fill-opacity="0.30"/>
+  <path d="M600 90 L600 1000 M1000 90 L1000 1000" stroke="#FFE3DF" stroke-opacity="0.75" stroke-width="2.4"/>
+  <rect width="1600" height="1000" fill="url(#fade-02)"/>
+</svg>

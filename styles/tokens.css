@@ -1,0 +1,136 @@
+/* =========================================================
+   FKR MEDIA USA — DESIGN TOKENS
+   Layer 1: brand ramp  ·  Layer 2: semantic  ·  Layer 3: system
+
+   The two brand constants are sampled directly from the supplied
+   logo artwork (public/brand/fkr-media-usa-logo.png):
+     #EE473D  — 87.1% of the logo's opaque pixels
+     #050505  — 12.4% (the MEDIA wordmark)
+   Everything below is derived from those two values.
+   ========================================================= */
+
+:root {
+  /* ---- 1a. Neutral ramp — warm-leaning blacks, never navy ---- */
+  --n-950: #050505;   /* page ground — the logo's own black */
+  --n-900: #080808;
+  --n-850: #0C0C0C;
+  --n-800: #121212;
+  --n-750: #181818;
+  --n-700: #202020;
+  --n-600: #2A2A2A;
+
+  /* ---- 1b. FKR red ramp ---- */
+  --r-700: #A82A23;   /* pressed / deep */
+  --r-600: #C2352D;
+  --r-500: #EE473D;   /* BRAND — exact logo value, never altered */
+  --r-400: #FF5B51;   /* hover / hot highlight */
+  --r-200: #F7AEAA;   /* soft tint (present in the logo's own edges) */
+  --r-050: #FFE3DF;   /* warm specular highlight */
+
+  /* ---- 1c. Warm neutrals for type ---- */
+  --paper:      #F4F2EF;
+  --paper-dim:  #A7A4A0;
+  --paper-mute: #85827E;  /* 5.3:1 on the ground, 4.9:1 under the ember */
+
+  /* ---- 2. Semantic ---- */
+  --bg:            var(--n-950);
+  --bg-raised:     var(--n-850);
+  --bg-sunken:     #030303;
+  --surface:       var(--n-800);
+  --surface-2:     var(--n-750);
+
+  --fg:            var(--paper);
+  --fg-muted:      var(--paper-dim);
+  --fg-faint:      var(--paper-mute);
+
+  --brand:         var(--r-500);
+  --brand-hover:   var(--r-400);
+  --brand-deep:    var(--r-600);
+  --brand-warm:    var(--r-050);
+  --brand-soft:    rgba(238, 71, 61, 0.12);
+
+  /* Structure is neutral by default; red borders mark state, not boxes. */
+  --border:        rgba(255, 255, 255, 0.08);
+  --border-raised: rgba(255, 255, 255, 0.14);
+  --border-brand:  rgba(238, 71, 61, 0.20);
+  --border-brand-strong: rgba(238, 71, 61, 0.36);
+
+  --scrim:         rgba(5, 5, 5, 0.74);
+  --glow:          rgba(238, 71, 61, 0.18);
+
+  /* Atmospheric page ground — a single restrained red signal at the top
+     of an otherwise neutral black. Never a red wash. */
+  --ground: radial-gradient(95% 55% at 50% -14%, rgba(238, 71, 61, 0.050) 0%, rgba(238, 71, 61, 0.014) 28%, var(--n-950) 56%);
+
+  /* ---- 3. Typography ---- */
+  --font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --font-body:    'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --fs-mega:    clamp(1.75rem, 8vw, 8.5rem);
+  --fs-display: clamp(2.75rem, 8.4vw, 8rem);
+  --fs-h2:      clamp(2rem, 5.4vw, 4.75rem);
+  --fs-h3:      clamp(1.375rem, 2.6vw, 2.375rem);
+  --fs-h4:      clamp(1.125rem, 1.5vw, 1.5rem);
+  --fs-lead:    clamp(1.0625rem, 1.35vw, 1.375rem);
+  --fs-body:    1rem;
+  --fs-sm:      0.875rem;
+  --fs-label:   0.75rem;
+
+  --lh-tight:   0.92;
+  --lh-snug:    1.08;
+  --lh-normal:  1.4;
+  --lh-body:    1.65;
+
+  --tr-mega:    -0.045em;
+  --tr-display: -0.035em;
+  --tr-tight:   -0.02em;
+  --tr-label:   0.18em;
+
+  /* ---- 4. Spacing scale (4px base) ---- */
+  --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;  --sp-4: 1rem;
+  --sp-5: 1.5rem;   --sp-6: 2rem;     --sp-7: 3rem;     --sp-8: 4rem;
+  --sp-9: 6rem;     --sp-10: 8rem;    --sp-11: 11rem;
+  --sp-section: clamp(6rem, 13vh, 11rem);
+
+  /* ---- 5. Grid & containers ---- */
+  --container:  1560px;
+  --container-narrow: 980px;
+  --gutter:     clamp(1.25rem, 4vw, 4.5rem);
+  --cols:       12;
+  --col-gap:    clamp(1rem, 1.8vw, 2rem);
+
+  /* ---- 6. Borders & radii (sharp, engineered) ---- */
+  --r-0: 0px;
+  --r-1: 2px;
+  --r-2: 6px;
+  --r-pill: 999px;
+  --hairline: 1px solid var(--border);
+
+  /* ---- 7. Motion tokens ---- */
+  --e-out:   cubic-bezier(0.16, 1, 0.30, 1);
+  --e-inout: cubic-bezier(0.83, 0, 0.17, 1);
+  --e-quick: cubic-bezier(0.40, 0, 0.20, 1);
+  --d-fast:  180ms;
+  --d-base:  280ms;
+  --d-slow:  620ms;
+  --d-cine:  1200ms;
+
+  /* ---- 8. Layer scale ---- */
+  --z-canvas:    1;
+  --z-content:   10;
+  /* The menu sits below the bar: its own close control lives in the nav,
+     so the nav must stay reachable while the menu is open. */
+  --z-menu:     100;
+  --z-nav:      200;
+  --z-cursor:   300;
+  --z-intro:    400;
+  --z-preloader: 500;
+
+  /* ---- 9. Runtime ---- */
+  --vh: 1vh;
+  --nav-h: 84px;
+}
+
+@media (max-width: 768px) {
+  :root { --nav-h: 68px; }
+}

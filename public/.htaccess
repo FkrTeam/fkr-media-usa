@@ -1,0 +1,47 @@
+# FKR MEDIA USA — cache policy for the static build.
+#
+# Uploaded as part of dist/. Apache only; on nginx it is inert and the same
+# rules belong in the server block (see README, "Caching on the server").
+#
+# The build has two kinds of file and they want opposite treatment:
+#
+#   assets/…            Vite writes a content hash INTO the filename, so a
+#                       given URL can only ever mean one exact file. Cache
+#                       these as hard as possible and never revalidate.
+#
+#   *.html              Stable names, changing contents, and they are what
+#                       names the hashed bundle. If a visitor holds a stale
+#                       document they stay pinned to an old build no matter
+#                       how correct everything else is. Always revalidate.
+#
+#   images, media, …    Copied verbatim out of public/, so the path never
+#                       changes — but every request the app makes for one
+#                       carries ?v=<hash of public/>, which does. Safe to
+#                       cache for a long time: replacing a logo changes the
+#                       query and the browser treats it as a new URL.
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|json|xml)$">
+    Header always set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  <FilesMatch "\.(js|css|woff2|woff|ttf)$">
+    Header always set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  <FilesMatch "\.(png|jpe?g|webp|avif|gif|svg|ico|mp4|webm|m4v)$">
+    Header always set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+# ETags are derived from the inode on many shared hosts, so the same file
+# served from two machines gets two tags and revalidation never succeeds.
+# Last-Modified is enough here.
+<IfModule mod_headers.c>
+  Header unset ETag
+</IfModule>
+FileETag None
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
