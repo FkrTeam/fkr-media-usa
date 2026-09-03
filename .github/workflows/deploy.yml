@@ -38,6 +38,48 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
+      # Fails fast with a readable message when a secret is missing or has
+      # the wrong shape, instead of an opaque "Invalid format for
+      # Authorization header" from the Cloudflare API. Only lengths and
+      # character classes are printed — never the values.
+      - name: Check Cloudflare secrets
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          fail=0
+          describe() {
+            local v="$1"
+            local n=${#v}
+            local cls="other"
+            if [[ "$v" =~ ^[A-Za-z0-9_-]+$ ]]; then cls="token-chars"; fi
+            if [[ "$v" =~ ^[0-9a-f]+$ ]]; then cls="hex"; fi
+            if [[ "$v" =~ [[:space:]] ]]; then cls="contains-whitespace"; fi
+            echo "length=$n chars=$cls"
+          }
+          echo "CLOUDFLARE_API_TOKEN: $(describe "$TOKEN")"
+          echo "CLOUDFLARE_ACCOUNT_ID: $(describe "$ACCOUNT")"
+
+          if [[ -z "$TOKEN" ]]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is not set"; fail=1
+          elif [[ "$TOKEN" =~ [[:space:]] ]]; then
+            echo "::error::CLOUDFLARE_API_TOKEN contains whitespace or a line break — re-paste it as a single line"; fail=1
+          elif [[ "$TOKEN" =~ ^[0-9a-f]{37}$ ]]; then
+            echo "::error::CLOUDFLARE_API_TOKEN looks like the Global API Key (37 hex chars). Create an API *token* instead: My Profile → API Tokens → Create Token → 'Edit Cloudflare Workers'"; fail=1
+          elif [[ "$TOKEN" =~ ^[0-9a-f]{32}$ ]]; then
+            echo "::error::CLOUDFLARE_API_TOKEN looks like an ID (32 hex chars), not a token. Paste the token *value* shown once at creation, or use 'Roll' to get a new value"; fail=1
+          elif [[ ! "$TOKEN" =~ ^[A-Za-z0-9_-]{30,80}$ ]]; then
+            echo "::error::CLOUDFLARE_API_TOKEN has an unexpected format — expected ~40 chars of letters, digits, _ and -; no quotes, no 'Bearer'"; fail=1
+          fi
+
+          if [[ -z "$ACCOUNT" ]]; then
+            echo "::error::CLOUDFLARE_ACCOUNT_ID is not set"; fail=1
+          elif [[ ! "$ACCOUNT" =~ ^[0-9a-f]{32}$ ]]; then
+            echo "::error::CLOUDFLARE_ACCOUNT_ID should be 32 hex chars — Workers & Pages overview, right-hand column"; fail=1
+          fi
+
+          exit $fail
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
