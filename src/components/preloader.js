@@ -12,7 +12,6 @@ export default class Preloader {
   constructor({ reducedMotion = false } = {}) {
     this.root = qs('[data-preloader]')
     this.mark = qs('[data-preloader-mark]')
-    this.fill = qs('[data-preloader-fill]')
     this.pct = qs('[data-preloader-pct]')
     this.stage = qs('[data-preloader-stage]')
     this.reducedMotion = reducedMotion
@@ -43,7 +42,6 @@ export default class Preloader {
       overwrite: true,
       onUpdate: () => {
         const v = this.display.value
-        if (this.fill) this.fill.style.transform = `scaleX(${v})`
         if (this.pct) this.pct.textContent = `${Math.round(v * 100)}%`
       }
     })
@@ -72,7 +70,6 @@ export default class Preloader {
         duration: d * 0.4,
         ease: 'power2.inOut',
         onUpdate: () => {
-          if (this.fill) this.fill.style.transform = `scaleX(${this.display.value})`
           if (this.pct) this.pct.textContent = `${Math.round(this.display.value * 100)}%`
         }
       })
@@ -83,7 +80,6 @@ export default class Preloader {
           ease: 'power2.in',
           stagger: 0.04
         }, '+=0.15')
-        .to(this.fill, { scaleY: 0, transformOrigin: 'center', duration: d * 0.4, ease: 'power2.in' }, '<')
         .to(this.root, { opacity: 0, duration: d * 0.6, ease: 'power2.inOut' }, '-=0.2')
     })
   }

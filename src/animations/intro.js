@@ -92,6 +92,9 @@ export default class Intro {
       }
 
       this.root?.removeAttribute('hidden')
+      // Lets the cursor know it is over film rather than over the page —
+      // see `html.is-intro .cursor` in styles/components.css.
+      document.documentElement.classList.add('is-intro')
       gsap.to(this.root, { opacity: 1, duration: 0.6, ease: 'power2.out' })
 
       this._bind()
@@ -254,6 +257,8 @@ export default class Intro {
   }
 
   _skip() {
+    document.documentElement.classList.remove('is-intro')
+
     if (this.finished) return
     this._handoff({ immediate: false })
   }

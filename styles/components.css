@@ -148,6 +148,40 @@
 }
 
 html.has-cursor .cursor { display: block; }
+
+/* ---- The cursor over the intro film ----
+   The page is near-black, so a thin light ring reads perfectly against it.
+   The film is not: it cuts to a near-white studio, to water, to daylight,
+   and against those frames a 1.5px ring with a hairline halo simply
+   disappeared — which matters more here than anywhere else on the site,
+   because the only two things a visitor can do during the film are click
+   Sound or click Skip, and they cannot aim at a cursor they cannot see.
+   While the film is up the cursor gets a real outline and a cast shadow, so
+   it holds against any frame instead of only against the dark ones. */
+html.is-intro .cursor__ring-inner {
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  border-width: 2px;
+  border-color: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 0 0 1.5px rgba(5, 5, 5, 0.62),
+    inset 0 0 0 1.5px rgba(5, 5, 5, 0.62),
+    0 2px 12px rgba(5, 5, 5, 0.42);
+}
+
+html.is-intro .cursor__dot-inner {
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  box-shadow:
+    0 0 0 1.5px rgba(5, 5, 5, 0.62),
+    0 1px 6px rgba(5, 5, 5, 0.5);
+}
+
+html.is-intro .cursor__label {
+  text-shadow: 0 1px 4px rgba(5, 5, 5, 0.85);
+}
 html.has-cursor,
 html.has-cursor a,
 html.has-cursor button { cursor: none; }

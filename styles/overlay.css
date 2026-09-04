@@ -12,49 +12,22 @@
   background: var(--bg);
 }
 
+/* The progress rail is gone: with the mark this large it was reading as a
+   second, competing element in a composition that only needs one. The
+   percentage stays — the site still has real work to do before it opens,
+   and a number is honest feedback where a bar was decoration. */
 .preloader__inner {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sp-6);
-  width: min(320px, 74vw);
+  gap: clamp(1.75rem, 4vw, 2.75rem);
+  width: min(460px, 82vw);
 }
 
 .preloader__mark {
-  width: 108px;
+  width: clamp(200px, 30vw, 340px);
   height: auto;
   opacity: 0;
-}
-
-.preloader__bar {
-  position: relative;
-  width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.10);
-  overflow: hidden;
-}
-
-.preloader__fill {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, var(--brand-deep), var(--brand));
-  transform: scaleX(0);
-  transform-origin: left;
-  will-change: transform;
-}
-
-/* A very short afterglow trailing the leading edge — one pixel of light,
-   not a bloom. */
-.preloader__fill::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: -2px;
-  bottom: -2px;
-  width: 46px;
-  background: linear-gradient(90deg, transparent, rgba(238, 71, 61, 0.42));
-  filter: blur(4px);
-  pointer-events: none;
 }
 
 .preloader__meta {
