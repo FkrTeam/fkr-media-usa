@@ -203,7 +203,7 @@ client and review data reaches four routes:
 
 | Block | `/` | `/services` | `/about` | `/contact` |
 |---|:--:|:--:|:--:|:--:|
-| Client marks (42) | strip | strip | wall | strip |
+| Client marks (15) | strip | strip | wall | strip |
 | Client reviews (3) | ● | ● | ● | — |
 | Numbers | ● | ● | ● | ● |
 
@@ -342,7 +342,7 @@ plausible. What remains unsupplied:
 | `stats.js` | **Four real figures**, supplied by FKR | 24+ years, 400+ projects, 250+ clients, 6+ countries — live on all four routes, counting up on scroll. Each carries `suffix: '+'`, rendered in the brand red, so every figure reads as a floor rather than an exact count. Clear `suffix` on any record that should read as exact. The placeholder mechanism is intact — a record with `value: null` and `placeholder: true` shows its `display` string dimmed and never animates. |
 | `reviews.js` | Three real clients, quotes **published** | Names, titles and companies were supplied by FKR. The quotes began as drafts written for client approval and were released by setting `quotePending: false` on each record. The gate still works: set it back to `true` and that card shows "testimonial pending approval" instead. Preview any draft with `?reviews=draft`; each is stamped DRAFT. Keep every published quote backed by the client's own approval — an unapproved quote attributed to a named person is a fabricated endorsement under FTC 16 CFR 465. |
 | `reviews.js` → `reviewSummary` | `enabled: false` | The aggregate rating strip renders nothing at all. Turn it on only with a real, attributable source. No Clutch badge, no invented score. |
-| `references.js` | **42 real client marks** | Supplied by FKR as their own roster and sliced from the brand wall they provided. `url` is null on every record — linking a client out needs their real address, and a guessed one would point visitors at a site that may not be theirs. A record with `logo: null` degrades to a typographic wordmark rather than a gap. |
+| `references.js` | **15 real client marks** | The clients FKR chose to show, sliced from the brand wall they provided. `url` is null on every record — linking a client out needs their real address, and a guessed one would point visitors at a site that may not be theirs. A record with `logo: null` degrades to a typographic wordmark rather than a gap. |
 | `services.js` | Six categories, `placeholder: true` | A sensible structure to confirm, not a verified FKR offer. |
 | `about.js` | Manifesto, approach, values | Describes a posture. No founding date, headcount, office list or staff name is asserted anywhere. |
 | `site.js` → `contact` | Availability line | Still invented. The address and email are real and single-sourced — `scripts/pages.mjs` substitutes them into the markup at build time, so they are crawlable prose that exists in exactly one file. There is deliberately no phone number and no reply-time promise anywhere on the site; a stated turnaround is a commitment, so it should only appear as a real one. `site.js` → `socials` holds the three real FKR accounts and feeds the footer, the contact page and the JSON-LD `sameAs` from one place. |
