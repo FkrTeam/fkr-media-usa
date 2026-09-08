@@ -420,6 +420,43 @@
   .numbers__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-6) var(--col-gap); }
 }
 
+/* ---------------- CASE STUDIES ----------------
+
+   Deliberately thin. A case is an index, a sector, the client's name and
+   the figures — and the figures are `.stat`, the same component the home
+   page's numbers are built from, so a campaign result and a company metric
+   are typeset identically and count up the same way. Anything invented here
+   would have made the two read as different kinds of claim. */
+.case__name {
+  margin-top: var(--sp-6);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: var(--tr-display);
+}
+
+/* --figures is set per case in the markup: Halka Arz reports three where
+   the others report four, and a fixed four-column rule would leave it with
+   an empty cell the eye reads as a missing number. */
+.case__figures {
+  display: grid;
+  grid-template-columns: repeat(var(--figures, 4), minmax(0, 1fr));
+  gap: var(--sp-7) var(--col-gap);
+  margin-top: var(--sp-8);
+}
+
+/* Two columns rather than three on the way down, for the same reason the
+   home page's grid does it: three would orphan a single figure on its own
+   row at four figures, and again at three. */
+@media (max-width: 1100px) {
+  .case__figures { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-6) var(--col-gap); }
+}
+
+@media (max-width: 560px) {
+  .case__figures { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ---------------- HOME 04 · REVIEWS ---------------- */
 .reviews__summary {
   display: flex;

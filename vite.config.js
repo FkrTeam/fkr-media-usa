@@ -75,6 +75,7 @@ export default defineConfig(({ mode }) => {
       input: {
         home: resolve(__dirname, 'index.html'),
         services: resolve(__dirname, 'services/index.html'),
+        caseStudies: resolve(__dirname, 'case-studies/index.html'),
         about: resolve(__dirname, 'about/index.html'),
         contact: resolve(__dirname, 'contact/index.html')
       },

@@ -99,13 +99,25 @@ export function revealOnScroll(scope = document) {
   }
 }
 
-/** Counts a statistic up when it enters the viewport. */
+/**
+ * Counts a statistic up when it enters the viewport.
+ *
+ * `data-count-decimals` fixes the number of decimal places, for figures
+ * that are rates rather than counts — a click-through rate has to land on
+ * 1.25 and hold every intermediate frame at two places, or the number
+ * jitters between one and two digits the whole way up. Absent, it is zero,
+ * which is `Math.round` by another name and what every existing counter
+ * gets.
+ */
 export function countUp(node) {
   const target = Number(node.dataset.count)
   if (!Number.isFinite(target)) return
 
+  const decimals = Number(node.dataset.countDecimals) || 0
+  const format = (value) => value.toFixed(decimals)
+
   if (prefersReducedMotion()) {
-    node.textContent = String(target)
+    node.textContent = format(target)
     return
   }
 
@@ -116,7 +128,7 @@ export function countUp(node) {
     ease: 'power3.out',
     scrollTrigger: { trigger: node, start: 'top 88%', once: true },
     onUpdate: () => {
-      node.textContent = String(Math.round(state.value))
+      node.textContent = format(state.value)
     }
   })
 }

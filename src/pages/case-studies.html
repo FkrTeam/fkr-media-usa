@@ -1,0 +1,190 @@
+<!--@meta
+{
+  "route": "case-studies",
+  "out": "case-studies/index.html",
+  "path": "/case-studies",
+  "title": "FKR Media USA — Case studies",
+  "description": "Campaign results for Bizim Evler, Artaş and a public offering: pre-registration forms, YouTube TrueView views, Google Display impressions, click-through and engagement rates."
+}
+-->
+
+      <!-- ─── Case studies hero ─── -->
+      <section class="hero hero--page" aria-labelledby="cases-hero">
+        <div class="container hero__top">
+          <p class="eyebrow">Case studies</p>
+        </div>
+
+        <div class="container">
+          <h1 class="hero__title hero__title--page" id="cases-hero">
+            <span class="line-mask"><span class="line-inner">The work,</span></span>
+            <span class="line-mask"><span class="line-inner"><span class="accent-word">measured.</span></span></span>
+          </h1>
+
+          <div class="hero__foot">
+            <p class="hero__intro lead" data-reveal="up">
+              Campaigns run for developers and brands, and the results they returned.
+              Residential launches and a public offering, carried across video,
+              display and demand capture.
+            </p>
+            <p class="hero__scroll" data-reveal="fade">
+              <span class="hero__scroll-line" data-hero-scroll-line aria-hidden="true"></span>
+              Scroll for the numbers
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!--
+        Each case is: index + sector, the client, then the figures.
+
+        The figures reuse the `.stat` component the home page's numbers are
+        built from — same type scale, same red accent, same count-up on
+        scroll — so a result here and a company metric there read as the same
+        kind of claim. `--figures` is the column count, because Halka Arz has
+        three where the others have four.
+
+        THE NUMBERS ARE IN THE MARKUP, not rendered from a data file. They are
+        the substance of this page, so they have to survive with JavaScript
+        off and be there for a crawler; `data-count` only drives the
+        animation over the top of a figure that is already written out.
+
+        Turkish shorthand was converted for an English audience: `75B+` is
+        seventy-five THOUSAND (bin), so it is written 75K+ here — read as
+        "billion" it would overstate the result by six orders of magnitude.
+        `%1,25` becomes 1.25%. The Google product is TrueView, not Thruview.
+      -->
+
+      <!-- ─── 01 · Bizim Evler ─── -->
+      <section class="section case" aria-labelledby="case-bizim-evler">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">01</span>
+            <p class="section-label">Residential development</p>
+          </div>
+
+          <h2 class="case__name" id="case-bizim-evler" data-reveal="up">Bizim Evler</h2>
+
+          <div class="case__figures" style="--figures: 4">
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="75">75</span><span class="stat__suffix">K+</span>
+              </p>
+              <p class="stat__label">Pre-registration forms</p>
+            </div>
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="45">45</span><span class="stat__suffix">M+</span>
+              </p>
+              <p class="stat__label">YouTube TrueView views</p>
+            </div>
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="700">700</span><span class="stat__suffix">M+</span>
+              </p>
+              <p class="stat__label">Google Display impressions</p>
+            </div>
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="5">5</span><span class="stat__suffix">+</span>
+              </p>
+              <p class="stat__label">Projects delivered</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── 02 · Artaş ─── -->
+      <section class="section case" aria-labelledby="case-artas">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">02</span>
+            <p class="section-label">Residential development</p>
+          </div>
+
+          <h2 class="case__name" id="case-artas" data-reveal="up">Arta&#351;</h2>
+
+          <div class="case__figures" style="--figures: 4">
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="15">15</span><span class="stat__suffix">K+</span>
+              </p>
+              <p class="stat__label">Pre-registration forms</p>
+            </div>
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="5">5</span><span class="stat__suffix">M+</span>
+              </p>
+              <p class="stat__label">YouTube TrueView views</p>
+            </div>
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="20">20</span><span class="stat__suffix">M+</span>
+              </p>
+              <p class="stat__label">Google Display impressions</p>
+            </div>
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="30">30</span><span class="stat__suffix">+</span>
+              </p>
+              <p class="stat__label">Apartments sold</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── 03 · Halka Arz ─── -->
+      <section class="section case" aria-labelledby="case-halka-arz">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">03</span>
+            <p class="section-label">Public offering</p>
+          </div>
+
+          <h2 class="case__name" id="case-halka-arz" data-reveal="up">Halka Arz</h2>
+
+          <div class="case__figures" style="--figures: 3">
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="75">75</span><span class="stat__suffix">M+</span>
+              </p>
+              <p class="stat__label">Ad impressions</p>
+            </div>
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="1.25" data-count-decimals="2">1.25</span><span class="stat__suffix">%</span>
+              </p>
+              <p class="stat__label">Click-through rate</p>
+            </div>
+            <div class="stat" data-reveal="up">
+              <p class="stat__value">
+                <span data-count="5.4" data-count-decimals="1">5.4</span><span class="stat__suffix">%</span>
+              </p>
+              <p class="stat__label">Engagement rate</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── 04 · Contact CTA ─── -->
+      <section class="section contact-cta" aria-labelledby="cases-cta-title">
+        <div class="container">
+          <div class="section-head">
+            <span class="section-index">04</span>
+            <h2 class="section-label">Contact</h2>
+          </div>
+
+          <p class="contact-cta__title" id="cases-cta-title" data-split-lines>
+            Let&rsquo;s put your numbers here.
+          </p>
+
+          <div class="contact-cta__actions">
+            <a class="btn btn--lg btn--solid" href="/contact" data-route-link data-magnetic>
+              Start a project
+              <svg class="btn__arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M2 14 L14 2 M6 2 h8 v8" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+            </a>
+            <a class="link" href="mailto:{{email}}">{{email}}</a>
+          </div>
+        </div>
+      </section>
