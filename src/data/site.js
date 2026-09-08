@@ -90,23 +90,32 @@ export const siteData = {
   },
 
   /* --- Intro film -------------------------------------------------------
-     Sources are tried in order; the first that plays wins. If none load,
-     the experience falls through to a generated title sequence. */
+     Two differently framed cuts, chosen by viewport orientation (see
+     prefersPortraitFilm in utils/device.js): `desktop` is the 1920×1080
+     landscape master, `mobile` the 900×1300 portrait one. Within a cut the
+     sources are tried in order; the first that plays wins. If none load,
+     the experience falls through to a generated title sequence.
+     scripts/encode-intro.sh writes every file named here. */
   intro: {
-    desktop: [
-      { src: 'media/intro-desktop.webm', type: 'video/webm' },
-      { src: 'media/intro-desktop.mp4', type: 'video/mp4' }
-    ],
-    mobile: [
-      { src: 'media/intro-mobile.webm', type: 'video/webm' },
-      { src: 'media/intro-mobile.mp4', type: 'video/mp4' }
-    ],
-    poster: 'media/intro-poster.jpg',
-    // Length of the encoded film, and only a fallback: the intro reads
-    // video.duration as soon as metadata arrives and prefers that. It exists
-    // so the timecode and the progress bar have something sane to show in
-    // the moments before the browser has parsed the file.
-    duration: 42,
+    desktop: {
+      sources: [
+        { src: 'media/intro-desktop.webm', type: 'video/webm' },
+        { src: 'media/intro-desktop.mp4', type: 'video/mp4' }
+      ],
+      poster: 'media/intro-poster.jpg'
+    },
+    mobile: {
+      sources: [
+        { src: 'media/intro-mobile.webm', type: 'video/webm' },
+        { src: 'media/intro-mobile.mp4', type: 'video/mp4' }
+      ],
+      poster: 'media/intro-poster-mobile.jpg'
+    },
+    // Length of the encoded films (both run 38 s), and only a fallback: the
+    // intro reads video.duration as soon as metadata arrives and prefers
+    // that. It exists so the timecode and the progress bar have something
+    // sane to show in the moments before the browser has parsed the file.
+    duration: 38,
     fallbackLines: ['Strategy', 'Creativity', 'Technology', 'FKR Media USA']
   }
 }

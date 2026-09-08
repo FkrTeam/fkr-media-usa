@@ -599,16 +599,17 @@ function renderContactSelects() {
    Intro film sources — shell-level, rendered once
    ══════════════════════════════════════════════════════════════════════ */
 
-export function renderIntroSources({ light = false } = {}) {
+export function renderIntroSources({ portrait = false } = {}) {
   const video = qs('[data-intro-video]')
   if (!video) return
 
-  // `light` is a bandwidth decision made by prefersLightVideo(), not a
-  // viewport one. Source order matters: the browser takes the FIRST type it
+  // `portrait` is an orientation decision made by prefersPortraitFilm():
+  // the two cuts are differently framed films, so each carries its own
+  // poster too. Source order matters: the browser takes the FIRST type it
   // can play, so WebM/VP9 is listed ahead of the H.264 fallback.
-  const sources = light ? siteData.intro.mobile : siteData.intro.desktop
-  fill(video, sources.map((source) => el('source', { src: asset(source.src), type: source.type })))
-  video.setAttribute('poster', asset(siteData.intro.poster))
+  const cut = portrait ? siteData.intro.mobile : siteData.intro.desktop
+  fill(video, cut.sources.map((source) => el('source', { src: asset(source.src), type: source.type })))
+  video.setAttribute('poster', asset(cut.poster))
 }
 
 /**

@@ -31,28 +31,21 @@ export const isTouch = () => mq('(hover: none)').matches || navigator.maxTouchPo
 export const isMobileViewport = () => window.innerWidth < 768
 
 /**
- * Whether this device should get the smaller cut of the intro film.
+ * Whether this viewport should get the portrait cut of the intro film.
  *
- * Deliberately NOT `isMobileViewport()`. That threshold is 768px because it
- * is a layout question, and reusing it here handed the full 1080p file to
- * every tablet and small laptop — devices that gain nothing from the extra
- * pixels and often pay for the bytes. The film is a bandwidth question, so
- * it gets a bandwidth threshold.
- *
- * Data Saver wins outright when the browser reports it: a visitor who has
- * asked for less data has answered this question already, at any width. The
- * same goes for a connection that reports itself as 2g/3g.
+ * The two cuts are DIFFERENT FILMS, not one film at two sizes: FKR framed a
+ * 1920×1080 landscape master and a separate 900×1300 portrait master. So
+ * this is a framing question, and the only honest answer is the viewport's
+ * own orientation — a portrait screen shows the portrait film, everything
+ * else the landscape one. Width thresholds and Data Saver used to drive this
+ * when the mobile file was merely the small encode; they cannot any more,
+ * because handing a 16:9 window the portrait film would crop away most of
+ * its picture under `object-fit: cover`.
  */
-export function prefersLightVideo() {
-  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection
-
-  if (connection) {
-    if (connection.saveData) return true
-    if (/^(slow-)?2g$/.test(connection.effectiveType || '')) return true
-    if (connection.effectiveType === '3g') return true
-  }
-
-  return window.innerWidth < 1024
+export function prefersPortraitFilm() {
+  const mq = window.matchMedia?.('(orientation: portrait)')
+  if (mq && typeof mq.matches === 'boolean') return mq.matches
+  return window.innerHeight > window.innerWidth
 }
 
 /**

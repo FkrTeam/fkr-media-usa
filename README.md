@@ -38,7 +38,7 @@ npm run preview
 | `npm run preview` | Serves the built site on `:4173` |
 | `npm run assets` | Regenerates the placeholder project posters |
 | `npm run brand` | Rebuilds the mark, favicon, touch icon and OG card from the logo |
-| `npm run intro` | Re-renders the 40-second intro film (needs `ffmpeg`) |
+| `npm run intro -- <landscape> <portrait>` | Re-encodes both intro films (needs `ffmpeg`) |
 | `npm run pages` | Composes the four route documents from `src/pages/` |
 | `npm run shots` | Headless screenshots at every breakpoint (dev aid) |
 
@@ -180,7 +180,7 @@ src/
 scripts/
   generate-placeholders.mjs  Vector project-poster generator
   generate-brand-assets.sh   Mark / favicon / OG card, cut from the logo
-  make-intro.sh              Procedural 40s intro film (ffmpeg)
+  encode-intro.sh            Encodes the two intro films (ffmpeg)
   shots.mjs  probe.mjs       Headless QA harnesses
 ```
 
@@ -378,18 +378,27 @@ every navigation.
 
 ### Replacing the film
 
-`public/media/` currently holds a **procedurally generated placeholder**
-(`npm run intro` regenerates it). Drop the real brand film in with the same
-names and everything works unchanged:
+`public/media/` holds two **differently framed cuts** of the FKR brand film,
+not one film at two sizes: a 1920×1080 landscape master and a 900×1300
+portrait master. Re-encode both from the masters with
 
 ```
-intro-desktop.webm / intro-desktop.mp4    1920×1080
-intro-mobile.webm  / intro-mobile.mp4      960×540
-intro-poster.jpg                           first frame
+npm run intro -- "/path/to/landscape.mp4" "/path/to/portrait.mp4"
 ```
 
-Sources are declared in `site.js` and chosen by viewport, so a phone never
-downloads the desktop file.
+which writes
+
+```
+intro-desktop.webm / intro-desktop.mp4    1920×1080 landscape
+intro-mobile.webm  / intro-mobile.mp4      900×1300 portrait
+intro-poster.jpg / intro-poster-mobile.jpg first frame of each
+```
+
+Sources are declared in `site.js` and chosen by **viewport orientation**
+(`prefersPortraitFilm` in `utils/device.js`): a portrait screen gets the
+portrait film, anything landscape gets the landscape one. Neither cut is
+downscaled — the portrait master is only 900 px wide and a 3× phone shows
+every lost pixel — and both keep their soundtrack.
 
 ---
 
