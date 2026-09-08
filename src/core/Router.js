@@ -2,6 +2,7 @@ import gsap from 'gsap'
 import { qs, qsa } from '../utils/dom.js'
 import { prefersReducedMotion } from '../utils/device.js'
 import { resetScroll, scrollToHash } from '../animations/scroll.js'
+import { reportPageView } from '../utils/analytics.js'
 
 /**
  * Client-side router.
@@ -181,6 +182,10 @@ export default class Router {
     if (push) history.pushState({ path }, '', url.pathname + url.hash)
     this.path = path
     this.markActive()
+
+    // After the head swap and the pushState, so the title and URL reported
+    // are the route being entered rather than the one just left.
+    reportPageView()
 
     // The new route starts at its own beginning — never at the offset the
     // previous one happened to be left at. `onEnter` resets it a second time
