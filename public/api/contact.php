@@ -54,8 +54,6 @@ const LIMITS = [
     'service' => 40, 'budget' => 40, 'message' => 4000,
 ];
 const BODY_LIMIT = 16 * 1024;
-const SERVICES = ['digital-advertising', 'social-media', 'seo', 'web', 'branding', 'content', 'other'];
-const BUDGETS = ['', 'under-25k', '25-50k', '50-100k', '100k-plus', 'unsure'];
 const HONEYPOT = 'company_website';
 const RATE_WINDOW = 3600;   // seconds
 const RATE_MAX = 5;
@@ -69,19 +67,36 @@ CREATE TABLE IF NOT EXISTS enquiries (
   company       VARCHAR(160) NULL,
   email         VARCHAR(254) NOT NULL,
   phone         VARCHAR(40)  NULL,
-  service       VARCHAR(40)  NOT NULL,
-  budget        VARCHAR(40)  NULL,
+  service       VARCHAR(80)  NOT NULL,
+  budget        VARCHAR(80)  NULL,
   message       TEXT         NOT NULL,
   ip_hash       CHAR(64)     NOT NULL,
-  country       CHAR(2)      NULL,
   user_agent    VARCHAR(300) NULL,
   referer       VARCHAR(500) NULL,
   notified_at   DATETIME(3)  NULL,
-  notify_error  VARCHAR(200) NULL,
+  notify_status VARCHAR(200) NULL,
   INDEX enquiries_received_at (received_at),
   INDEX enquiries_ip_window (ip_hash, received_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 SQL;
+
+/**
+ * id → label for the services and budget bands the form offers.
+ *
+ * labels.php is generated from src/config/enquiry.js on every build — the
+ * same source that fills the form's <select>s and that the Worker imports.
+ * So this is both the allow-list and the labels, and it cannot disagree
+ * with the options the visitor was shown.
+ */
+function labels(): array
+{
+    static $cache = null;
+    if ($cache === null) {
+        $file = __DIR__ . '/labels.php';
+        $cache = is_file($file) ? require $file : ['services' => [], 'budgets' => []];
+    }
+    return $cache;
+}
 
 function respond(int $status, array $data, array $headers = []): void
 {
@@ -141,7 +156,6 @@ $ipHash = hash('sha256', ($cfg['IP_SALT'] ?? '') . ':' . $ip);
 
 $meta = [
     'ipHash' => $ipHash,
-    'country' => substr((string)($_SERVER['HTTP_CF_IPCOUNTRY'] ?? ''), 0, 2) ?: null,
     'userAgent' => substr((string)($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 300) ?: null,
     'referer' => substr((string)($_SERVER['HTTP_REFERER'] ?? ''), 0, 500) ?: null,
     'receivedAt' => gmdate('Y-m-d H:i:s.v'),
@@ -167,11 +181,18 @@ if ($hasDb) {
 
 /* ---------- notify ---------- */
 
+// The reason is kept, not just the fact: "535 authentication failed" on
+// the row is the difference between a fixable setting and a mystery.
 $mailed = false;
+$mailFailure = null;
 try {
     $mailed = notify($cfg, $enquiry, $meta, $stored);
+    if (!$mailed) {
+        $mailFailure = 'Mail settings incomplete';
+    }
 } catch (Throwable $e) {
     logError('email failed: ' . $e->getMessage());
+    $mailFailure = substr($e->getMessage(), 0, 200);
     $mailed = false;
 }
 
@@ -179,10 +200,17 @@ if ($stored === null && !$mailed) {
     respond(500, ['error' => 'We could not take your enquiry just now. Please email us directly.']);
 }
 
+// notify_status is filled in either case — the reason on failure, "No
+// problem" on success — because a column that is empty both when all is
+// well and when nothing has happened yet tells the reader nothing.
 if ($stored !== null && $pdo) {
     try {
-        $pdo->prepare('UPDATE enquiries SET notified_at = ?, notify_error = ? WHERE id = ?')
-            ->execute([$mailed ? gmdate('Y-m-d H:i:s.v') : null, $mailed ? null : 'send failed', $stored]);
+        $pdo->prepare('UPDATE enquiries SET notified_at = ?, notify_status = ? WHERE id = ?')
+            ->execute([
+                $mailed ? gmdate('Y-m-d H:i:s.v') : null,
+                $mailed ? 'No problem' : ($mailFailure ?? 'Send failed'),
+                $stored,
+            ]);
     } catch (Throwable $e) {
         logError('could not record notification state: ' . $e->getMessage());
     }
@@ -249,15 +277,25 @@ function validate(array $body): array
     if (!preg_match('/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u', $e['email']) || preg_match('/[\r\n<>]/', $e['email'])) {
         $errors['email'] = 'Please enter a valid email address.';
     }
-    if (!in_array($e['service'], SERVICES, true)) {
+    $tables = labels();
+    if (!isset($tables['services'][$e['service']])) {
         $errors['service'] = 'Please choose the service you are interested in.';
     }
-    if (!in_array($e['budget'], BUDGETS, true)) {
+    if ($e['budget'] !== '' && !isset($tables['budgets'][$e['budget']])) {
         $errors['budget'] = 'Please choose a listed range.';
     }
     if (ulen($e['message']) < 10) {
         $errors['message'] = 'Please tell us a little more — at least a sentence.';
     }
+
+    if ($errors) {
+        return [$e, $errors];
+    }
+
+    // From here on the enquiry carries what a person reads, not what a
+    // <select> submitted.
+    $e['service'] = $tables['services'][$e['service']];
+    $e['budget'] = $e['budget'] !== '' ? $tables['budgets'][$e['budget']] : '';
 
     return [$e, $errors];
 }
@@ -352,7 +390,58 @@ function openDb(array $cfg): PDO
     $pdo = new PDO($dsn, $cfg['MYSQL_USER'], (string)$cfg['MYSQL_PASSWORD'], $options);
     $pdo->exec("SET time_zone = '+00:00'");
     $pdo->exec(CREATE_TABLE);
+    migrate($pdo);
     return $pdo;
+}
+
+/**
+ * Brings a table created by an earlier version up to the current shape.
+ *
+ * CREATE TABLE IF NOT EXISTS does nothing to a table that already exists,
+ * so a database from before these changes would keep the columns below and
+ * quietly fail every insert. Each step is guarded by what is actually in
+ * information_schema, so this is safe to run on every connection and does
+ * nothing at all on a current table. It mirrors MIGRATIONS in worker/db.js.
+ *
+ *   country        collected from a Cloudflare header the form never asked
+ *                  for. Dropped.
+ *   notify_error   became notify_status, which is filled in either way: the
+ *                  reason on failure, "No problem" on success. A column
+ *                  that is NULL both when all is well and when nothing has
+ *                  happened yet cannot be read at a glance.
+ *   service/budget now hold labels ("Digital Advertising"), not ids, so the
+ *                  columns need the room.
+ */
+function migrate(PDO $pdo): void
+{
+    $st = $pdo->query(
+        "SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH
+           FROM information_schema.COLUMNS
+          WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'enquiries'"
+    );
+    $columns = [];
+    foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        $columns[$row['COLUMN_NAME']] = (int)($row['CHARACTER_MAXIMUM_LENGTH'] ?? 0);
+    }
+
+    $steps = [];
+    if (isset($columns['country'])) {
+        $steps[] = 'ALTER TABLE enquiries DROP COLUMN country';
+    }
+    if (isset($columns['notify_error']) && !isset($columns['notify_status'])) {
+        $steps[] = 'ALTER TABLE enquiries CHANGE notify_error notify_status VARCHAR(200) NULL';
+    }
+    if (isset($columns['service']) && $columns['service'] < 80) {
+        $steps[] = 'ALTER TABLE enquiries MODIFY service VARCHAR(80) NOT NULL';
+    }
+    if (isset($columns['budget']) && $columns['budget'] < 80) {
+        $steps[] = 'ALTER TABLE enquiries MODIFY budget VARCHAR(80) NULL';
+    }
+
+    foreach ($steps as $sql) {
+        logError('migrating: ' . $sql);
+        $pdo->exec($sql);
+    }
 }
 
 function countRecent(PDO $pdo, string $ipHash): int
@@ -369,12 +458,12 @@ function store(PDO $pdo, array $e, array $meta): string
     $pdo->prepare(
         'INSERT INTO enquiries
            (id, received_at, name, company, email, phone, service, budget, message,
-            ip_hash, country, user_agent, referer, notified_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)'
+            ip_hash, user_agent, referer, notified_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)'
     )->execute([
         $id, $meta['receivedAt'], $e['name'], $e['company'] ?: null, $e['email'], $e['phone'] ?: null,
         $e['service'], $e['budget'] ?: null, $e['message'],
-        $meta['ipHash'], $meta['country'], $meta['userAgent'], $meta['referer'],
+        $meta['ipHash'], $meta['userAgent'], $meta['referer'],
     ]);
     return $id;
 }
@@ -415,7 +504,6 @@ function notify(array $cfg, array $e, array $meta, ?string $id): bool
         ['Phone', $e['phone'] !== '' ? $e['phone'] : '—'],
         ['Service', $e['service']],
         ['Budget', $e['budget'] !== '' ? $e['budget'] : '—'],
-        ['Country', $meta['country'] ?? '—'],
         ['Received', $meta['receivedAt'] . ' UTC'],
         ['Record', $id ?? 'not stored'],
     ];

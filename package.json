@@ -5,9 +5,9 @@
   "type": "module",
   "description": "FKR Media USA — cinematic WebGL creative agency experience.",
   "scripts": {
-    "predev": "node scripts/pages.mjs",
+    "predev": "node scripts/pages.mjs && node scripts/labels.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/pages.mjs",
+    "prebuild": "node scripts/pages.mjs && node scripts/labels.mjs",
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "pages": "node scripts/pages.mjs",
@@ -18,7 +18,8 @@
     "postbuild": "node scripts/deploy-note.mjs",
     "dev:worker": "npm run build && wrangler dev",
     "deploy": "wrangler deploy",
-    "pack": "node scripts/pack.mjs"
+    "pack": "node scripts/pack.mjs",
+    "labels": "node scripts/labels.mjs"
   },
   "dependencies": {
     "gsap": "^3.12.5",

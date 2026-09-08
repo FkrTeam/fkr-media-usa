@@ -18,7 +18,7 @@
  * in clear either way — MySQL authentication is challenge/response — but
  * the enquiry text would be. Set "require" once the host confirms TLS.
  *
- * The table is created on first use, so setup is one database and one user
+ * The schema is applied on first use, so setup is one database and one user
  * with rights on it; migrations/enquiries.mysql.sql is the same statement
  * for anyone who prefers phpMyAdmin.
  */
@@ -33,21 +33,57 @@ CREATE TABLE IF NOT EXISTS enquiries (
   company       VARCHAR(160) NULL,
   email         VARCHAR(254) NOT NULL,
   phone         VARCHAR(40)  NULL,
-  service       VARCHAR(40)  NOT NULL,
-  budget        VARCHAR(40)  NULL,
+  service       VARCHAR(80)  NOT NULL,
+  budget        VARCHAR(80)  NULL,
   message       TEXT         NOT NULL,
   ip_hash       CHAR(64)     NOT NULL,
-  country       CHAR(2)      NULL,
   user_agent    VARCHAR(300) NULL,
   referer       VARCHAR(500) NULL,
   notified_at   DATETIME(3)  NULL,
-  notify_error  VARCHAR(200) NULL,
+  notify_status VARCHAR(200) NULL,
   INDEX enquiries_received_at (received_at),
   INDEX enquiries_ip_window (ip_hash, received_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`
 
-/** True once this isolate has confirmed the table exists. */
-let tableReady = false
+/**
+ * Brings a table created by an earlier version up to the current shape.
+ *
+ * CREATE TABLE IF NOT EXISTS does nothing to a table that already exists,
+ * so a database from before these changes would keep the columns below and
+ * quietly fail every insert. Each step is guarded by what is actually in
+ * information_schema, so this is safe to run on every connection and does
+ * nothing at all on a current table.
+ *
+ *   country        collected from a Cloudflare header the form never asked
+ *                  for. Dropped.
+ *   notify_error   became notify_status, which is filled in either way:
+ *                  the reason on failure, "No problem" on success. A column
+ *                  that is NULL both when all is well and when nothing has
+ *                  happened yet cannot be read at a glance.
+ *   service/budget now hold labels ("Digital Advertising"), not ids, so the
+ *                  columns need the room.
+ */
+export const MIGRATIONS = [
+  {
+    when: (columns) => columns.has('country'),
+    sql: 'ALTER TABLE enquiries DROP COLUMN country'
+  },
+  {
+    when: (columns) => columns.has('notify_error') && !columns.has('notify_status'),
+    sql: 'ALTER TABLE enquiries CHANGE notify_error notify_status VARCHAR(200) NULL'
+  },
+  {
+    when: (columns) => (columns.get('service')?.length ?? 80) < 80,
+    sql: 'ALTER TABLE enquiries MODIFY service VARCHAR(80) NOT NULL'
+  },
+  {
+    when: (columns) => (columns.get('budget')?.length ?? 80) < 80,
+    sql: 'ALTER TABLE enquiries MODIFY budget VARCHAR(80) NULL'
+  }
+]
+
+/** True once this isolate has confirmed the schema. Reset per deploy. */
+let schemaReady = false
 
 export function configured(env) {
   return Boolean(env.MYSQL_HOST && env.MYSQL_DATABASE && env.MYSQL_USER && env.MYSQL_PASSWORD)
@@ -88,13 +124,32 @@ async function open(env) {
   }
 }
 
+async function ensureSchema(connection) {
+  await connection.query(CREATE_TABLE)
+
+  const [rows] = await connection.query(
+    `SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH
+       FROM information_schema.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'enquiries'`
+  )
+  const columns = new Map(
+    rows.map((row) => [row.COLUMN_NAME, { length: Number(row.CHARACTER_MAXIMUM_LENGTH || 0) }])
+  )
+
+  for (const step of MIGRATIONS) {
+    if (!step.when(columns)) continue
+    console.info(`[db] migrating: ${step.sql}`)
+    await connection.query(step.sql)
+  }
+}
+
 /** Runs `fn(connection)` on a fresh connection and always closes it. */
 export async function withDb(env, fn) {
   const connection = await open(env)
   try {
-    if (!tableReady) {
-      await connection.query(CREATE_TABLE)
-      tableReady = true
+    if (!schemaReady) {
+      await ensureSchema(connection)
+      schemaReady = true
     }
     return await fn(connection)
   } finally {

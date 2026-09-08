@@ -33,6 +33,10 @@ Thumbs.db
 /services/
 /contact/
 
+# Label tables generated into the PHP endpoint by scripts/labels.mjs, from
+# src/config/enquiry.js. Build output, regenerated before every build.
+public/api/labels.php
+
 # Local Worker secrets for `wrangler dev` (RESEND_API_KEY etc.). Never committed.
 .dev.vars
 

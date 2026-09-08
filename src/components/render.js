@@ -6,7 +6,7 @@ import { reviews, reviewSummary } from '../data/reviews.js'
 import { stats } from '../data/stats.js'
 import { references } from '../data/references.js'
 import { approach, values } from '../data/about.js'
-import { budgetRanges } from '../config/contact.js'
+import { serviceOptions, budgetOptions } from '../config/enquiry.js'
 
 /**
  * Content rendering: turns the files in `src/data` into DOM.
@@ -580,18 +580,20 @@ function renderValues() {
    ══════════════════════════════════════════════════════════════════════ */
 
 function renderContactSelects() {
+  // Both lists come from config/enquiry.js, which is also what the two
+  // backends validate against and store labels from — so an option can
+  // never be offered that the server would reject or keep as a raw slug.
   const service = qs('[data-service-select]')
   if (service) {
     fill(service, [
       el('option', { value: '', text: 'Select a service' }),
-      ...services.map((item) => el('option', { value: item.id, text: item.name })),
-      el('option', { value: 'other', text: 'Something else' })
+      ...serviceOptions.map(({ value, label }) => el('option', { value, text: label }))
     ])
   }
 
   const budget = qs('[data-budget-select]')
   if (budget) {
-    fill(budget, budgetRanges.map((range) => el('option', { value: range.value, text: range.label })))
+    fill(budget, budgetOptions.map(({ value, label }) => el('option', { value, text: label })))
   }
 }
 

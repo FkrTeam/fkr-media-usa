@@ -44,6 +44,7 @@
 
 import { sendMail, buildMessage, parseAddress } from './smtp.js'
 import { withDb, configured as dbConfigured, toDateTime } from './db.js'
+import { serviceLabels, budgetLabels } from '../src/config/enquiry.js'
 
 const LIMITS = {
   name: 120,
@@ -56,10 +57,12 @@ const LIMITS = {
   body: 16 * 1024          // bytes — nothing legitimate is anywhere near this
 }
 
-const SERVICES = new Set([
-  'digital-advertising', 'social-media', 'seo', 'web', 'branding', 'content', 'other'
-])
-const BUDGETS = new Set(['', 'under-25k', '25-50k', '50-100k', '100k-plus', 'unsure'])
+// The form submits ids; the enquiry is stored and emailed as labels. Both
+// tables come from src/config/enquiry.js, which is also what fills the
+// form's <select>s — so the allow-list can never disagree with the options
+// on offer, and nothing is ever stored as a raw slug.
+const SERVICES = new Set(Object.keys(serviceLabels))
+const BUDGETS = new Set(['', ...Object.keys(budgetLabels)])
 
 const HONEYPOT = 'company_website'
 
@@ -123,7 +126,6 @@ async function handleContact(request, env, ctx) {
 
   const meta = {
     ipHash,
-    country: request.headers.get('cf-ipcountry') || null,
     userAgent: (request.headers.get('user-agent') || '').slice(0, 300),
     referer: (request.headers.get('referer') || '').slice(0, 500),
     receivedAt: new Date().toISOString()
@@ -134,8 +136,12 @@ async function handleContact(request, env, ctx) {
     return null
   }) : null
 
+  // The reason is kept, not just the fact: "535 authentication failed" on
+  // the row is the difference between a fixable setting and a mystery.
+  let mailFailure = null
   const mailed = await notify(env, enquiry, meta, stored).catch((error) => {
     console.error('[contact] email failed', error)
+    mailFailure = String(error?.message || error).slice(0, 200)
     return false
   })
 
@@ -144,13 +150,20 @@ async function handleContact(request, env, ctx) {
   }
 
   // Record how the notification went on the row, so a follow-up can find
-  // enquiries FKR was never told about. Off the response path.
+  // enquiries FKR was never told about. notify_status is filled in either
+  // case — the reason on failure, "No problem" on success — because a
+  // column that is empty both when all is well and when nothing has
+  // happened yet tells the reader nothing. Off the response path.
   if (stored) {
     ctx.waitUntil(
       withDb(env, (db) =>
         db.execute(
-          'UPDATE enquiries SET notified_at = ?, notify_error = ? WHERE id = ?',
-          [mailed ? toDateTime(new Date().toISOString()) : null, mailed ? null : (mailed === false ? 'send failed' : null), stored]
+          'UPDATE enquiries SET notified_at = ?, notify_status = ? WHERE id = ?',
+          [
+            mailed ? toDateTime(new Date().toISOString()) : null,
+            mailed ? 'No problem' : (mailFailure || 'Send failed'),
+            stored
+          ]
         )
       ).catch(() => {})
     )
@@ -189,7 +202,14 @@ function validate(body) {
   // would let them append headers of their own, so refuse it outright.
   if (/[\r\n<>]/.test(e.email)) errors.email = 'Please enter a valid email address.'
 
-  return Object.keys(errors).length ? { errors } : { enquiry: e }
+  if (Object.keys(errors).length) return { errors }
+
+  // From here on the enquiry carries what a person reads, not what a
+  // <select> submitted.
+  e.service = serviceLabels[e.service]
+  e.budget = e.budget ? budgetLabels[e.budget] : ''
+
+  return { enquiry: e }
 }
 
 /* ---------- storage ---------- */
@@ -208,12 +228,12 @@ async function store(db, e, meta) {
   await db.execute(
     `INSERT INTO enquiries
        (id, received_at, name, company, email, phone, service, budget, message,
-        ip_hash, country, user_agent, referer, notified_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)`,
+        ip_hash, user_agent, referer, notified_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)`,
     [
       id, toDateTime(meta.receivedAt), e.name, e.company || null, e.email, e.phone || null,
       e.service, e.budget || null, e.message,
-      meta.ipHash, meta.country, meta.userAgent || null, meta.referer || null
+      meta.ipHash, meta.userAgent || null, meta.referer || null
     ]
   )
   return id
@@ -241,7 +261,6 @@ async function notify(env, e, meta, id) {
     ['Phone', e.phone || '—'],
     ['Service', e.service],
     ['Budget', e.budget || '—'],
-    ['Country', meta.country || '—'],
     ['Received', meta.receivedAt],
     ['Record', id || 'not stored']
   ]
