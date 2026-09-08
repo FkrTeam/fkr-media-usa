@@ -29,10 +29,15 @@
 # it the browser must download the entire file before it knows how to play any
 # of it; with it, playback starts on the first buffered seconds.
 #
-# QUALITY OVER BYTES, WITHIN REASON. The masters are ~10 Mb/s H.264 straight
-# out of the edit. x264 at CRF 18 / preset slower is transparent against
-# that source; anything lower only re-encodes the master's own compression
-# noise more faithfully. VP9 runs two passes — in constant-quality mode the
+# QUALITY OVER BYTES, WITHIN ONE HARD LIMIT. The masters are ~10 Mb/s H.264
+# straight out of the edit. x264 at CRF 18 / preset slower is transparent
+# against that source; anything lower only re-encodes the master's own
+# compression noise more faithfully. The desktop MP4 runs at CRF 19 instead
+# because Cloudflare Workers refuses any static asset over 25 MiB, and at
+# CRF 18 that file came out at 26.1 MiB. The MP4 is only Safari's fallback —
+# Chrome and Firefox take the far smaller WebM listed ahead of it — and the
+# step from 18 to 19 is below what anyone sees. The check at the end fails
+# the run rather than let an oversized file reach a deploy. VP9 runs two passes — in constant-quality mode the
 # first pass gives the second a complexity map, which is worth 10-15% of the
 # file at the same quality. Both keep a 2-second GOP so a seek or a stall
 # recovers on the next keyframe rather than the next scene.
@@ -79,7 +84,7 @@ OPUS="-c:a libopus -b:a 128k -ac 2"
 log "1/6  desktop 1920x1080 H.264"
 ffmpeg -hide_banner -loglevel error -y -i "$LAND" \
   -vf "scale=1920:1080:flags=lanczos" \
-  $X264 -crf 18 -level 4.1 $AAC -movflags +faststart "$OUT/intro-desktop.mp4"
+  $X264 -crf 19 -level 4.1 $AAC -movflags +faststart "$OUT/intro-desktop.mp4"
 
 log "2/6  mobile 900x1300 H.264"
 ffmpeg -hide_banner -loglevel error -y -i "$PORT" \
@@ -109,6 +114,16 @@ ffmpeg -hide_banner -loglevel error -y -ss 0.2 -i "$LAND" -frames:v 1 -q:v 3 "$O
 
 log "6/6  mobile poster"
 ffmpeg -hide_banner -loglevel error -y -ss 0.2 -i "$PORT" -frames:v 1 -q:v 3 "$OUT/intro-poster-mobile.jpg"
+
+# Cloudflare Workers static assets: 25 MiB per file, no exceptions.
+LIMIT=$((25 * 1024 * 1024))
+for f in "$OUT"/intro-*; do
+  size="$(stat -c %s "$f" 2>/dev/null || stat -f %z "$f")"
+  if [ "$size" -gt "$LIMIT" ]; then
+    echo "error: $(basename "$f") is $size bytes, over the 25 MiB Cloudflare asset limit — raise its CRF" >&2
+    exit 1
+  fi
+done
 
 DUR="$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT/intro-desktop.mp4" | cut -d. -f1)"
 
