@@ -17,7 +17,8 @@
     "shots": "node scripts/shots.mjs",
     "postbuild": "node scripts/deploy-note.mjs",
     "dev:worker": "npm run build && wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "pack": "node scripts/pack.mjs"
   },
   "dependencies": {
     "gsap": "^3.12.5",

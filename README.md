@@ -38,6 +38,7 @@ npm run preview
 | `npm run preview` | Serves the built site on `:4173` |
 | `npm run assets` | Regenerates the placeholder project posters |
 | `npm run brand` | Rebuilds the mark, favicon, touch icon and OG card from the logo |
+| `npm run pack` | Builds for the domain root and writes `site-upload.zip` |
 | `npm run intro -- <landscape> <portrait>` | Re-encodes both intro films (needs `ffmpeg`) |
 | `npm run pages` | Composes the four route documents from `src/pages/` |
 | `npm run shots` | Headless screenshots at every breakpoint (dev aid) |
@@ -357,6 +358,26 @@ the same rules, one per deploy:
 |---|---|---|
 | Cloudflare | `worker/index.js` (+ `db.js`, `smtp.js`) | `wrangler.jsonc` vars + `wrangler secret put` |
 | Shared Linux host (Apache + PHP) | `public/api/contact.php` (+ `smtp.php`), routed by `.htaccess` | one file, `fkr-contact.env`, above `public_html` |
+
+**Uploading to the shared host:** `npm run pack`. It builds with
+`VITE_BASE=/` (the committed `.env` says `/fkr-media-usa/`, which is for
+the sub-directory test host and would 404 every asset at a domain root),
+writes `site-upload.zip` *next to* `dist/` rather than inside it, and
+refuses to finish unless `.htaccess`, `index.html` and `api/contact.php`
+are in the archive under forward-slash paths. Upload that zip to
+`public_html` and **extract it there** — an unextracted zip leaves the
+document root with no `index.html`, which is what a directory listing at
+the domain means. Pass a base to pack for a sub-directory:
+`npm run pack -- /sub/`.
+
+`.env` itself is never uploaded: it is read at build time and its values
+are already baked into the HTML.
+
+`.htaccess` also **forces HTTPS** (301, with HSTS for two years including
+subdomains) and turns off directory listings. If a subdomain exists without
+a certificate, drop `includeSubDomains` from the header before uploading —
+browsers hold that instruction for the full two years even if the header
+is later removed.
 
 **Shared host, in short:** copy `fkr-contact.env.example` to
 `fkr-contact.env`, fill it in, upload it to the directory *above*

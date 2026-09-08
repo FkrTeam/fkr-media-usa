@@ -46,6 +46,46 @@ FileETag None
   AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 </IfModule>
 
+# ── HTTPS, and only HTTPS ──────────────────────────────────────────────
+#
+# Everything arrives over TLS or is redirected to it, before any other rule
+# runs. The contact form posts a name, an email address and a message, and
+# a single plaintext request would put all three on the wire in the clear.
+#
+# The condition tests three things because a shared host can present the
+# request in any of these ways: %{HTTPS} is off on a direct plain request;
+# X-Forwarded-Proto is what a proxy or load balancer in front of the server
+# sets; X-Forwarded-SSL is LiteSpeed's older spelling of the same thing.
+# Testing only the first would redirect forever behind a terminating proxy.
+#
+# 301, not 302: browsers remember it, so the second visit never makes the
+# plaintext request at all.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteCond %{HTTP:X-Forwarded-SSL} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# HSTS tells the browser to never try plaintext for this host again, so a
+# typed "fkrmediausa.com" skips the redirect entirely. Two years, and
+# subdomains included.
+#
+# BEFORE ENABLING, be sure every subdomain that exists has a certificate:
+# includeSubDomains makes an http-only subdomain unreachable, and the
+# browser holds that instruction for the full max-age even if this header
+# is later removed. Drop `includeSubDomains` if that is not certain.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"
+</IfModule>
+
+# No directory listings. Every route ships an index.html, so a listing only
+# ever appears where something is missing — and then it shows the contents
+# of the directory to anyone who asks.
+Options -Indexes
+
 # ── Contact form endpoint ──────────────────────────────────────────────
 #
 # The form posts to <base>/api/contact. On Cloudflare a Worker answers it;

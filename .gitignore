@@ -6,7 +6,8 @@ dist/
 shots/
 
 # Archives. A zip of the site left in the tree once ended up inside dist/,
-# where it would have been publicly downloadable after upload.
+# where it would have been publicly downloadable after upload — which is
+# exactly what `npm run zip` avoids by writing outside the folder it packs.
 *.zip
 *.tar
 *.tar.gz
