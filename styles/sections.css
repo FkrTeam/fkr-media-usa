@@ -436,6 +436,29 @@
   letter-spacing: var(--tr-display);
 }
 
+/* The story, between the client's name and its numbers.
+   `.case__lead` is the situation in one breath; `.case__aside` is the brief
+   and the media in labelled columns, borrowing `.contact__key` from the
+   contact page so a label here and a label there are the same object. Both
+   are capped in `ch` rather than pixels — a measure is a reading distance,
+   and it should not change because the viewport did. */
+.case__lead {
+  margin-top: var(--sp-6);
+  max-width: 62ch;
+  font-size: var(--fs-lead);
+  color: var(--fg-muted);
+}
+
+.case__aside {
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-6);
+  border-top: var(--hairline);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--sp-6) var(--col-gap);
+}
+.case__aside p:not(.contact__key) { color: var(--fg-muted); max-width: 46ch; }
+
 /* --figures is set per case in the markup: Halka Arz reports three where
    the others report four, and a fixed four-column rule would leave it with
    an empty cell the eye reads as a missing number. */
