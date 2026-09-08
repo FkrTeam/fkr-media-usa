@@ -107,7 +107,22 @@
    Sits beside the skip button and shares its language, but is visible from
    the first frame rather than fading in on a delay: if the browser refused
    audible autoplay, this control IS the fix, and a visitor cannot act on a
-   control they cannot see. */
+   control they cannot see.
+
+   IT RESTS AT FULL STRENGTH. It used to sit at 86% white on a 62%-black
+   pill and go to full white on hover, and over a bright frame — the film
+   opens on one — that difference read as the control appearing on hover
+   rather than merely brightening. A control the visitor has to find by
+   sweeping the pointer over the film is not visible, whatever the computed
+   opacity says. So the resting state is now the strong one: full-strength
+   text, a border that holds its own, and a backdrop opaque enough to carry
+   the label over any frame the film cuts to.
+
+   Hover therefore has to say something else. It lifts the border and
+   deepens the pill rather than brightening text that is already at full —
+   which also fixes the old rule outright, because --border-raised (0.14)
+   was FAINTER than the 0.30 it replaced: hovering used to weaken the
+   outline. */
 .intro__sound {
   display: inline-flex;
   align-items: center;
@@ -120,16 +135,24 @@
   font-size: var(--fs-label);
   letter-spacing: var(--tr-label);
   text-transform: uppercase;
-  color: rgba(244, 242, 239, 0.86);
-  border: 1px solid rgba(244, 242, 239, 0.30);
-  background: rgba(5, 5, 5, 0.62);
-  transition: color var(--d-base) var(--e-quick), border-color var(--d-base) var(--e-quick);
+  color: var(--fg);
+  border: 1px solid rgba(244, 242, 239, 0.42);
+  background: rgba(5, 5, 5, 0.78);
+  transition:
+    border-color var(--d-base) var(--e-quick),
+    background-color var(--d-base) var(--e-quick);
+}
+
+/* Separates the pill from the film underneath where the browser supports
+   it. Purely additive: the background above already carries the label. */
+@supports (backdrop-filter: blur(4px)) {
+  .intro__sound { backdrop-filter: blur(4px); }
 }
 
 .intro__sound:hover,
 .intro__sound:focus-visible {
-  color: var(--fg);
-  border-color: var(--border-raised);
+  border-color: rgba(244, 242, 239, 0.72);
+  background: rgba(5, 5, 5, 0.9);
 }
 
 .intro__sound-icon { width: 20px; height: 20px; flex: none; }
