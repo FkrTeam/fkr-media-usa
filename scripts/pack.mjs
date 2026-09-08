@@ -30,7 +30,7 @@
  */
 
 import { execFileSync } from 'node:child_process'
-import { existsSync, rmSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, rmSync, statSync, utimesSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -54,6 +54,23 @@ if (!existsSync(resolve(dist, '.htaccess'))) {
 }
 
 if (existsSync(zip)) rmSync(zip)
+
+// Stamp everything with the moment it was packed.
+//
+// Vite copies public/ verbatim and keeps each file's original mtime, so the
+// videos and logos in a fresh build carry dates from whenever they were last
+// encoded — months old, next to assets written seconds ago. In a file manager
+// that reads as "this upload is stale", and the only way to tell otherwise is
+// to compare hashes. One date across the archive removes the doubt.
+const now = new Date()
+const stamp = (dir) => {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = resolve(dir, entry.name)
+    if (entry.isDirectory()) stamp(path)
+    else utimesSync(path, now, now)
+  }
+}
+stamp(dist)
 
 const pwsh = (script) =>
   execFileSync('pwsh', ['-NoProfile', '-Command', script], { encoding: 'utf8' })
@@ -86,7 +103,7 @@ for (const required of ['.htaccess', 'index.html', 'api/contact.php', 'contact/i
 }
 
 const mb = (statSync(zip).size / 1024 / 1024).toFixed(1)
-console.log(`[pack] ${names.length} entries, paths verified`)
+console.log(`[pack] ${names.length} entries, paths verified, all dated ${now.toLocaleString()}`)
 console.log(`\n[pack] ${zip}  (${mb} MB)`)
 console.log('[pack] upload it to public_html and EXTRACT it there — the zip itself is not the site.')
 console.log('[pack] then check that .htaccess arrived: File Manager → Settings → show hidden files.')
