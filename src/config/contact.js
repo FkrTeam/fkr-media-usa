@@ -1,25 +1,24 @@
 /**
  * Contact form integration point.
  *
- * ══════════════════════════════════════════════════════════════════════
- *  THE FORM IS NOT CONNECTED TO A BACKEND.
+ * The form posts JSON to `endpoint`, resolved against the deploy base, and
+ * both deploys answer it with the same rules: on Cloudflare the Worker
+ * (worker/index.js), on a shared Linux host api/contact.php (shipped in
+ * public/, routed by .htaccess). Either way the enquiry is stored in MySQL
+ * and emailed to FKR. A host with neither answers 404 and the form falls
+ * back to the pre-filled mailto route instead of claiming success.
  *
- *  `endpoint` is null. While it is null the form validates, but it will
- *  NOT report a successful submission — it shows an explicit "not yet
- *  connected" error and preserves everything the visitor typed.
- *
- *  This is deliberate. Silently swallowing an enquiry and showing a green
- *  tick would lose real business.
- *
- *  To connect it, set `endpoint` to a URL that accepts a JSON POST and
- *  returns 2xx on success. Anything works: a form service (Formspree,
- *  Basin, Web3Forms), a serverless function, or your own API.
- * ══════════════════════════════════════════════════════════════════════
+ * Set `endpoint` to null to disconnect the form: it will then validate but
+ * report plainly that nothing was sent, keeping the visitor's text.
  */
 
 export const contactConfig = {
-  /** @type {string|null} POST target. Null = not connected. */
-  endpoint: null,
+  /**
+   * @type {string|null} POST target. A leading slash means "under the deploy
+   * base" (so /api/contact becomes /fkr-media-usa/api/contact on the
+   * sub-directory host); a full URL is used as is. Null = not connected.
+   */
+  endpoint: '/api/contact',
 
   /** Sent as JSON unless you switch this to 'form'. */
   encoding: 'json',

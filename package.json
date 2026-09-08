@@ -15,10 +15,13 @@
     "brand": "bash scripts/generate-brand-assets.sh",
     "intro": "bash scripts/encode-intro.sh",
     "shots": "node scripts/shots.mjs",
-    "postbuild": "node scripts/deploy-note.mjs"
+    "postbuild": "node scripts/deploy-note.mjs",
+    "dev:worker": "npm run build && wrangler dev",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "gsap": "^3.12.5",
+    "mysql2": "^3.24.4",
     "three": "^0.169.0"
   },
   "devDependencies": {

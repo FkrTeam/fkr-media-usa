@@ -45,3 +45,30 @@ FileETag None
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 </IfModule>
+
+# ── Contact form endpoint ──────────────────────────────────────────────
+#
+# The form posts to <base>/api/contact. On Cloudflare a Worker answers it;
+# here api/contact.php does. The path is a file, not a directory, so no
+# trailing-slash redirect ever turns the POST into a GET.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^api/contact/?$ api/contact.php [L,QSA]
+</IfModule>
+
+# smtp.php is a library, not a page (it also refuses to run on its own).
+<Files "smtp.php">
+  Require all denied
+</Files>
+
+# Settings and schema files are never web content, wherever they end up.
+<FilesMatch "\.(env|sql|example)$">
+  Require all denied
+</FilesMatch>
+
+# The endpoint's replies are never cacheable.
+<Files "contact.php">
+  <IfModule mod_headers.c>
+    Header always set Cache-Control "no-store"
+  </IfModule>
+</Files>

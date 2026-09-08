@@ -31,3 +31,13 @@ Thumbs.db
 /about/
 /services/
 /contact/
+
+# Local Worker secrets for `wrangler dev` (RESEND_API_KEY etc.). Never committed.
+.dev.vars
+
+# wrangler local state (miniflare, the local D1 database, dev caches).
+.wrangler/
+
+# Shared-hosting settings for api/contact.php: passwords. Upload it above
+# public_html by hand; the .example next to it is the committed template.
+fkr-contact.env

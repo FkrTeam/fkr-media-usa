@@ -1,20 +1,30 @@
 {
   // Cloudflare deploy configuration.
   //
-  // Without this file wrangler tries to auto-detect a framework, sees Vite,
-  // and demands Vite 6+ so it can install the Cloudflare Vite plugin. That
-  // plugin exists to run a Worker alongside the build — and this project has
-  // no server-side code at all. It is four static HTML documents plus assets.
-  //
-  // Declaring `assets` with no `main` tells wrangler exactly that: upload the
-  // build output, run no Worker. The Vite version stops mattering.
+  // The site is four static HTML documents plus assets, served by the asset
+  // layer. The one piece of server code is worker/index.js, which answers
+  // POST /api/contact: it stores the enquiry in the hosting account's MySQL
+  // database (worker/db.js) and emails FKR through the same account's SMTP
+  // server (worker/smtp.js). Every other request
+  // is answered by the assets first; only a
+  // path that matches no file reaches the Worker, which answers 404.
   //
   // The build itself must set VITE_BASE=/ in the project's environment
   // variables. The committed .env targets the Apache sub-directory deploy at
   // /fkr-media-usa/, and without the override every asset URL would carry
   // that prefix and 404 at the domain root.
+  //
+  // ONE-TIME SETUP, in the Cloudflare account (see README, "Contact form"):
+  //   npx wrangler secret put MYSQL_USER          (the database user)
+  //   npx wrangler secret put MYSQL_PASSWORD      (that user's password)
+  //   npx wrangler secret put SMTP_USER           (the mailbox login, usually the full address)
+  //   npx wrangler secret put SMTP_PASS           (that mailbox's password)
+  //   npx wrangler secret put IP_SALT             (any long random string)
   "name": "fkr-media-usa",
+  "main": "worker/index.js",
   "compatibility_date": "2026-09-03",
+  // mysql2 needs node:net and friends; Cloudflare maps them onto its sockets.
+  "compatibility_flags": ["nodejs_compat"],
 
   "assets": {
     "directory": "./dist",
@@ -27,6 +37,39 @@
     // Not "single-page-application": that would answer every unknown path
     // with index.html and turn a typo into a 200, which is bad for both
     // visitors and crawlers. An unknown path should be a 404.
-    "not_found_handling": "none"
-  }
+    "not_found_handling": "none",
+
+    // The API must never be shadowed by a file of the same name.
+    "run_worker_first": ["/api/*"]
+  },
+
+  // Plain configuration, not secrets — every login and password is one of
+  // the secrets listed above and never appears in this file.
+  //
+  //   MYSQL_HOST      the hosting's MySQL server. Rarely "localhost": that is
+  //                   the address seen from inside the hosting, not from
+  //                   Cloudflare. Use the hostname or IP the host gives for
+  //                   remote access, and allow remote connections there
+  //                   (cPanel "Remote MySQL", access host %).
+  //   MYSQL_PORT      3306 unless the host says otherwise
+  //   MYSQL_DATABASE  the database name (cPanel prefixes it: account_name)
+  //   MYSQL_SSL       "prefer" (TLS when the server has it), "require", or "off"
+  //   SMTP_HOST       the hosting's outgoing mail server, e.g. mail.fkrmediausa.com
+  //   SMTP_PORT       465 with SMTP_SECURE "tls" (preferred), or 587 with "starttls"
+  //   MAIL_FROM       the mailbox the Worker logs in as — most hosts refuse to
+  //                   send as any other address
+  //   MAIL_TO         where enquiries are delivered; several, comma-separated, is fine
+  "vars": {
+    "MYSQL_HOST": "mysql.fkrmediausa.com",
+    "MYSQL_PORT": "3306",
+    "MYSQL_DATABASE": "fkrmedia_enquiries",
+    "MYSQL_SSL": "prefer",
+    "SMTP_HOST": "mail.fkrmediausa.com",
+    "SMTP_PORT": "465",
+    "SMTP_SECURE": "tls",
+    "MAIL_FROM": "FKR Media USA <hello@fkrmediausa.com>",
+    "MAIL_TO": "hello@fkrmediausa.com"
+  },
+
+  "observability": { "enabled": true }
 }

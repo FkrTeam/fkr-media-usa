@@ -1,4 +1,4 @@
-import { qs, qsa } from '../utils/dom.js'
+import { qs, qsa, base } from '../utils/dom.js'
 import { contactConfig } from '../config/contact.js'
 
 /**
@@ -143,7 +143,11 @@ export default class ContactForm {
     this._setStatus(contactConfig.messages.sending, '')
 
     try {
-      const response = await fetch(contactConfig.endpoint, {
+      const endpoint = contactConfig.endpoint.startsWith('/')
+        ? `${base().replace(/\/$/, '')}${contactConfig.endpoint}`
+        : contactConfig.endpoint
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers:
           contactConfig.encoding === 'json'
@@ -152,14 +156,31 @@ export default class ContactForm {
         body: contactConfig.encoding === 'json' ? JSON.stringify(payload) : data
       })
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      if (!response.ok) {
+        // The Worker explains itself (rate limit, a field it rejected); a
+        // bare 404 from a host with no backend does not. Use what it says.
+        const detail = await response.json().catch(() => null)
+        const error = new Error(`HTTP ${response.status}`)
+        error.detail = detail
+        throw error
+      }
 
       this.form.reset()
       this._setStatus(contactConfig.messages.success, 'success')
     } catch (error) {
       console.warn('[contact] submission failed', error)
-      this._setStatus(contactConfig.messages.error, 'error')
-      this._offerMailto(payload)
+      const detail = error.detail
+      if (detail?.fields) {
+        for (const [name, message] of Object.entries(detail.fields)) {
+          const field = qs(`[name="${name}"]`, this.form)
+          const slot = qs(`[data-error-for="${name}"]`, this.form)
+          field?.setAttribute('aria-invalid', 'true')
+          field?.classList.add('is-invalid')
+          if (slot) slot.textContent = message
+        }
+      }
+      this._setStatus(detail?.error || contactConfig.messages.error, 'error')
+      if (!detail?.fields) this._offerMailto(payload)
     } finally {
       this._setSending(false)
     }

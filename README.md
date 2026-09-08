@@ -174,7 +174,7 @@ src/
     about.js               About copy          (placeholder)
     brand.js               Brand colour source of truth for JS + GLSL
   config/
-    contact.js             Form endpoint — NOT CONNECTED by default
+    contact.js             Form endpoint (/api/contact — worker/ or public/api/)
   utils/
     dom.js  device.js  math.js  splitText.js
 scripts/
@@ -346,15 +346,85 @@ plausible. What remains unsupplied:
 | `services.js` | Six categories, `placeholder: true` | A sensible structure to confirm, not a verified FKR offer. |
 | `about.js` | Manifesto, approach, values | Describes a posture. No founding date, headcount, office list or staff name is asserted anywhere. |
 | `site.js` → `contact` | Availability line | Still invented. The address and email are real and single-sourced — `scripts/pages.mjs` substitutes them into the markup at build time, so they are crawlable prose that exists in exactly one file. There is deliberately no phone number and no reply-time promise anywhere on the site; a stated turnaround is a commitment, so it should only appear as a real one. `site.js` → `socials` holds the three real FKR accounts and feeds the footer, the contact page and the JSON-LD `sameAs` from one place. |
-| `config/contact.js` | `endpoint: null` | See below. |
+| `config/contact.js` | `endpoint: '/api/contact'` | Served by the Worker; see below. |
 
-### The contact form is not connected
+### Contact form
 
-While `endpoint` is null the form validates, then reports plainly that it is
-not connected, keeps everything the visitor typed, and offers a pre-filled
-mailto instead. It never shows a success state for a message that went
-nowhere. Point `endpoint` at any JSON-accepting URL — a form service, a
-serverless function, your own API — and it starts working.
+The form posts JSON to `<base>/api/contact`. Two backends answer it with
+the same rules, one per deploy:
+
+| Deploy | Backend | Settings |
+|---|---|---|
+| Cloudflare | `worker/index.js` (+ `db.js`, `smtp.js`) | `wrangler.jsonc` vars + `wrangler secret put` |
+| Shared Linux host (Apache + PHP) | `public/api/contact.php` (+ `smtp.php`), routed by `.htaccess` | one file, `fkr-contact.env`, above `public_html` |
+
+**Shared host, in short:** copy `fkr-contact.env.example` to
+`fkr-contact.env`, fill it in, upload it to the directory *above*
+`public_html` (the account's home directory). That is all: MySQL is on
+`localhost` there, so no remote access is needed, the table is created on
+first use, and the passwords never sit under the web root. `contact.php`
+also reads real environment variables (a panel's "environment variables"
+feature, or `SetEnv`) and lets them override the file. Failures go to the
+host's PHP error log with the SMTP or MySQL server's own reason.
+
+**Cloudflare:** `worker/index.js` answers it. Each enquiry is **stored in the hosting account's MySQL
+database** (the record of truth — `worker/db.js`, direct from the Worker
+with mysql2) and **emailed to FKR through the same account's SMTP server**
+(`worker/smtp.js` opens a TLS socket and speaks SMTP itself). No
+third-party service is involved in either. The two are independent: a mail
+outage never loses an enquiry, and the visitor only sees an error when
+both failed — then the form offers the pre-filled mailto instead of
+claiming success.
+
+What the Worker enforces, so a change here is a deliberate one:
+
+- same-origin POSTs only, no CORS; JSON up to 16 KB
+- every field re-validated with hard length caps; service and budget must
+  be values the form actually offers
+- the honeypot is checked server-side (a filled one gets a bland 200)
+- 5 enquiries per address per hour, counted on a salted SHA-256 of the IP;
+  the address itself is never stored
+- the email is built from HTML-escaped fields, From is FKR's own domain,
+  Reply-To is the visitor
+
+**One-time setup.** On the hosting: create a MySQL database and a user
+with rights on it, and allow remote connections (cPanel → *Remote MySQL*,
+access host `%`; Plesk → the user's *Access control*). The Worker creates
+the `enquiries` table itself on first use (`migrations/enquiries.mysql.sql`
+is the same statement for phpMyAdmin). Then, once, after `npx wrangler
+login` in the account that owns the Worker:
+
+```
+npx wrangler secret put MYSQL_USER            # the database user
+npx wrangler secret put MYSQL_PASSWORD        # that user's password
+npx wrangler secret put SMTP_USER             # the mailbox login, usually the full address
+npx wrangler secret put SMTP_PASS             # that mailbox's password
+npx wrangler secret put IP_SALT               # any long random string, e.g. `openssl rand -hex 32`
+```
+
+Everything that is not a password is a plain var in `wrangler.jsonc`:
+`MYSQL_HOST` (the address the host gives for *remote* access — not
+`localhost`), `MYSQL_PORT`, `MYSQL_DATABASE`, `MYSQL_SSL` (`prefer` by
+default: TLS when the server offers it), `SMTP_HOST`, `SMTP_PORT` (465
+with `SMTP_SECURE: tls`, or 587 with `starttls`), `MAIL_FROM` (the mailbox
+the Worker logs in as — most hosts refuse to send as anyone else) and
+`MAIL_TO`.
+
+If mail stops arriving, the Worker's Logs tab in the Cloudflare dashboard
+shows the SMTP server's own refusal ("535 authentication failed", "550
+relay denied"), and the enquiry is still in MySQL. If storing fails, the
+same log shows MySQL's reason — almost always remote access not enabled,
+or a `MYSQL_HOST` that only resolves from inside the hosting.
+
+Reading enquiries: phpMyAdmin, table `enquiries`. A row with `notified_at`
+NULL and a `notify_error` is an enquiry that was saved but whose email
+failed — the ones to follow up by hand.
+
+Local run: `npm run dev:worker` serves the built site with the Worker at
+http://localhost:8787. Point `.dev.vars` at a local MySQL (XAMPP's will do)
+and, for mail, either real SMTP settings or `SMTP_SECURE=none` against a
+plaintext local test server. Without them the Worker logs a warning and
+skips that half.
 
 ## The opening
 
@@ -470,7 +540,7 @@ Nothing in this build can leave a visitor stranded:
 
 ## Before launch
 
-- [ ] Connect the contact form (`endpoint` in `src/config/contact.js`)
+- [ ] Contact form: MySQL remote access, then the MYSQL_* and SMTP_* secrets (see "Contact form")
 - [ ] Replace every placeholder listed in the table above
 - [ ] Drop real client marks into `public/images/clients/` and fill in
       `references.js`
