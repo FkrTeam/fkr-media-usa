@@ -422,46 +422,146 @@
 
 /* ---------------- CASE STUDIES ----------------
 
-   Deliberately thin. A case is an index, a sector, the client's name and
-   the figures — and the figures are `.stat`, the same component the home
-   page's numbers are built from, so a campaign result and a company metric
-   are typeset identically and count up the same way. Anything invented here
-   would have made the two read as different kinds of claim. */
-.case__name {
-  margin-top: var(--sp-6);
+   Two shapes, because the work is now read in two passes. `/case-studies`
+   is an INDEX of `.case-card`s — sector, client, promise, two figures,
+   nothing that has to be read in order. Each case then has its own document
+   built from `.case-section`: the site's own numbered `.section-head` down
+   the left, `.case-prose` for the account, `.detail` for the workstreams,
+   and `.case__figures` for the results.
+
+   The figures are `.stat`, the same component the home page's numbers are
+   built from, so a campaign result and a company metric are typeset
+   identically and count up the same way. Anything invented here would have
+   made the two read as different kinds of claim. */
+
+/* ---- Index ---- */
+.case-index {
+  margin-top: var(--sp-7);
+  display: flex;
+  flex-direction: column;
+}
+
+/* A card is a row, not a tile: full measure, hairline above, the client's
+   name at display size. Tiles would have set three cases side by side at a
+   third of the width each, and the name is the thing being chosen between. */
+.case-card {
+  display: block;
+  padding-block: clamp(2rem, 4.5vw, 3.5rem);
+  border-top: var(--hairline);
+  transition: border-color var(--d-slow) var(--e-out);
+}
+.case-card:last-child { border-bottom: var(--hairline); }
+.case-card:hover,
+.case-card:focus-visible { border-color: var(--border-brand-strong); }
+
+.case-card__meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-4);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+}
+.case-card__num {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+.case-card__sector { color: var(--fg-muted); }
+
+.case-card__name {
+  margin-top: var(--sp-4);
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5.4vw, 4.25rem);
   font-weight: 500;
-  line-height: 0.96;
+  line-height: 0.98;
   letter-spacing: var(--tr-display);
 }
 
-/* The story, between the client's name and its numbers.
-   `.case__lead` is the situation in one breath; `.case__aside` is the brief
-   and the media in labelled columns, borrowing `.contact__key` from the
-   contact page so a label here and a label there are the same object. Both
-   are capped in `ch` rather than pixels — a measure is a reading distance,
-   and it should not change because the viewport did. */
-.case__lead {
-  margin-top: var(--sp-6);
-  max-width: 62ch;
+.case-card__line {
+  margin-top: var(--sp-4);
+  max-width: 42ch;
   font-size: var(--fs-lead);
   color: var(--fg-muted);
 }
 
-.case__aside {
-  margin-top: var(--sp-7);
-  padding-top: var(--sp-6);
-  border-top: var(--hairline);
+/* Two figures, not four: this is the decision to read on, not the result. */
+.case-card__figures {
+  margin-top: var(--sp-6);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: var(--sp-6) var(--col-gap);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-5) var(--col-gap);
+  max-width: 520px;
 }
-.case__aside p:not(.contact__key) { color: var(--fg-muted); max-width: 46ch; }
 
-/* --figures is set per case in the markup: Halka Arz reports three where
-   the others report four, and a fixed four-column rule would leave it with
-   an empty cell the eye reads as a missing number. */
+/* The index's figures sit under a name set at display size, so they are
+   stepped down to stay subordinate to it — same component, quieter voice. */
+.stat--sm .stat__value { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+.stat--sm .stat__label { margin-top: var(--sp-3); }
+
+.case-card__go {
+  margin-top: var(--sp-6);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  transition: color var(--d-base) var(--e-out);
+}
+.case-card__go svg { width: 13px; height: 13px; transition: transform var(--d-base) var(--e-out); }
+.case-card:hover .case-card__go,
+.case-card:focus-visible .case-card__go { color: var(--brand); }
+.case-card:hover .case-card__go svg,
+.case-card:focus-visible .case-card__go svg { transform: translate(3px, -3px); }
+
+@media (max-width: 560px) {
+  .case-card__figures { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- A single case ---- */
+
+/* The back link points down-left, so the arrow leaves the opposite way to
+   every forward arrow on the site. */
+.case-hero__back { margin-bottom: var(--sp-5); }
+.link--back:hover svg,
+.link--back:focus-visible svg { transform: translate(-3px, 3px); }
+
+.case-section { padding-block: clamp(3rem, 7vw, 6rem); }
+
+.case-prose {
+  margin-top: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  max-width: 62ch;
+  color: var(--fg-muted);
+}
+
+/* The first paragraph of a section carries it; the rest support it. Both are
+   capped in `ch` rather than pixels — a measure is a reading distance, and it
+   should not change because the viewport did. */
+.case-prose__lead {
+  font-size: var(--fs-lead);
+  color: var(--fg);
+  max-width: 54ch;
+}
+
+.case-objectives {
+  margin-top: var(--sp-6);
+  max-width: 54ch;
+}
+
+.case-approach { margin-top: var(--sp-6); }
+.case-approach .detail:first-child { padding-top: 0; }
+
+.case-results__lead { margin-top: var(--sp-6); }
+
+/* --figures is set per case in the markup: the IPO campaign reports three
+   where the others report four, and a fixed four-column rule would leave it
+   with an empty cell the eye reads as a missing number. */
 .case__figures {
   display: grid;
   grid-template-columns: repeat(var(--figures, 4), minmax(0, 1fr));
@@ -479,6 +579,61 @@
 @media (max-width: 560px) {
   .case__figures { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---- Next case ---- */
+.case-next__link {
+  margin-top: var(--sp-6);
+  display: block;
+  padding-top: var(--sp-6);
+  border-top: var(--hairline);
+  transition: border-color var(--d-slow) var(--e-out);
+}
+.case-next__link:hover,
+.case-next__link:focus-visible { border-color: var(--border-brand-strong); }
+
+.case-next__sector {
+  display: block;
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.case-next__name {
+  display: block;
+  margin-top: var(--sp-3);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.6vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: var(--tr-display);
+}
+
+.case-next__line {
+  display: block;
+  margin-top: var(--sp-4);
+  max-width: 46ch;
+  color: var(--fg-muted);
+  transition: color var(--d-base) var(--e-out);
+}
+/* base.css lays every svg out as a block, which is right everywhere it sits
+   in a flex row and wrong here: this arrow belongs on the last line of the
+   sentence, not underneath it. The comment in the markup closes the break
+   opportunity so it can never be orphaned onto a line of its own either. */
+.case-next__line svg {
+  display: inline-block;
+  vertical-align: baseline;
+  width: 13px;
+  height: 13px;
+  margin-left: var(--sp-2);
+  transition: transform var(--d-base) var(--e-out);
+}
+.case-next__link:hover .case-next__line,
+.case-next__link:focus-visible .case-next__line { color: var(--brand); }
+.case-next__link:hover .case-next__line svg,
+.case-next__link:focus-visible .case-next__line svg { transform: translate(3px, -3px); }
+
+.case-next__actions { margin-top: var(--sp-8); }
 
 /* ---------------- HOME 04 · REVIEWS ---------------- */
 .reviews__summary {

@@ -4,7 +4,7 @@
   "out": "case-studies/index.html",
   "path": "/case-studies",
   "title": "FKR Media USA — Case studies",
-  "description": "Campaign results for Bizim Evler, Artaş and a public offering: pre-registration forms, YouTube TrueView views, Google Display impressions, click-through and engagement rates."
+  "description": "Campaigns run for Bizim Evler, Artaş and a public offering, and the results they returned: qualified lead forms, YouTube TrueView views, Google Display impressions, click-through and engagement rates."
 }
 -->
 
@@ -28,216 +28,157 @@
             </p>
             <p class="hero__scroll" data-reveal="fade">
               <span class="hero__scroll-line" data-hero-scroll-line aria-hidden="true"></span>
-              Scroll for the numbers
+              Scroll for the work
             </p>
           </div>
         </div>
       </section>
 
       <!--
-        Each case is: index + sector, the client, then the figures.
+        This page is an INDEX. Each case has its own document under
+        /case-studies/<slug>, where the brief, the strategy and the results
+        are written out in full; a card here carries only what someone needs
+        to choose between them — sector, client, the promise, and the two
+        figures that decide whether the rest is worth reading.
 
-        The figures reuse the `.stat` component the home page's numbers are
-        built from — same type scale, same red accent, same count-up on
-        scroll — so a result here and a company metric there read as the same
-        kind of claim. `--figures` is the column count, because Halka Arz has
-        three where the others have four.
-
-        THE NUMBERS ARE IN THE MARKUP, not rendered from a data file. They are
-        the substance of this page, so they have to survive with JavaScript
-        off and be there for a crawler; `data-count` only drives the
-        animation over the top of a figure that is already written out.
+        THE NUMBERS ARE IN THE MARKUP, not rendered from a data file. They
+        are the substance of this page, so they have to survive with
+        JavaScript off and be there for a crawler; `data-count` only drives
+        the animation over the top of a figure that is already written out.
 
         Turkish shorthand was converted for an English audience: `75B+` is
-        seventy-five THOUSAND (bin), so it is written 75K+ here — read as
+        seventy-five THOUSAND (bin), so it is written 75K+ — read as
         "billion" it would overstate the result by six orders of magnitude.
         `%1,25` becomes 1.25%. The Google product is TrueView, not Thruview.
+        The figures are the part that must not move. -->
 
-        THE PROSE IS INFERRED FROM THE FIGURES, and only from them. FKR
-        supplied client names and numbers, nothing about how the work was
-        done, so every sentence here traces to a metric on the page: the
-        channels named are the channels the metrics name, the objective is
-        the metric that reports an outcome. No timeline, no team, no tactic
-        and no client quotation has been invented to fill the space. Anything
-        that misstates the actual engagement should be corrected here — the
-        figures below are the part that must not move. -->
-
-      <!-- ─── 01 · Bizim Evler ─── -->
-      <section class="section case" aria-labelledby="case-bizim-evler">
+      <!-- ─── 01 · The work ─── -->
+      <section class="section" aria-labelledby="cases-index-title">
         <div class="container">
           <div class="section-head">
             <span class="section-index">01</span>
-            <p class="section-label">Residential development</p>
+            <h2 class="section-label" id="cases-index-title">Selected work</h2>
           </div>
 
-          <h2 class="case__name" id="case-bizim-evler" data-reveal="up">Bizim Evler</h2>
+          <div class="case-index">
 
-          <p class="case__lead" data-reveal="up">
-            A residential development sells long before anyone can walk through it.
-            The launch had to turn attention into named demand — not impressions,
-            but people who had put their details down.
-          </p>
-
-          <div class="case__aside">
-            <div data-reveal="up">
-              <p class="contact__key">The brief</p>
-              <p>Build reach for a development at launch scale, and convert that reach
-                 into a register of interested buyers the sales team could work from.</p>
-            </div>
-            <div data-reveal="up">
-              <p class="contact__key">What we ran</p>
-              <p>Reach first, capture second. TrueView carried the film to an audience
-                 that chose to watch it; Google Display held the development in front of
-                 the same audience at scale. Both pointed at one pre-registration form.</p>
-            </div>
-          </div>
-
-          <div class="case__figures" style="--figures: 4">
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="75">75</span><span class="stat__suffix">K+</span>
+            <a class="case-card" href="/case-studies/bizim-evler" data-route-link data-reveal="up"
+               data-cursor-label="Read">
+              <p class="case-card__meta">
+                <span class="case-card__num">01</span>
+                <span class="case-card__sector">Residential development</span>
               </p>
-              <p class="stat__label">Pre-registration forms</p>
-            </div>
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="45">45</span><span class="stat__suffix">M+</span>
-              </p>
-              <p class="stat__label">YouTube TrueView views</p>
-            </div>
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="700">700</span><span class="stat__suffix">M+</span>
-              </p>
-              <p class="stat__label">Google Display impressions</p>
-            </div>
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="5">5</span><span class="stat__suffix">+</span>
-              </p>
-              <p class="stat__label">Projects delivered</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <!-- ─── 02 · Artaş ─── -->
-      <section class="section case" aria-labelledby="case-artas">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-index">02</span>
-            <p class="section-label">Residential development</p>
-          </div>
+              <h3 class="case-card__name">Bizim Evler</h3>
 
-          <h2 class="case__name" id="case-artas" data-reveal="up">Arta&#351;</h2>
-
-          <p class="case__lead" data-reveal="up">
-            The same model at a tighter scale, against a harder measure. Here the
-            campaign was not judged on registrations alone but on the contracts that
-            followed them.
-          </p>
-
-          <div class="case__aside">
-            <div data-reveal="up">
-              <p class="contact__key">The brief</p>
-              <p>Reach a narrower, higher-intent audience and carry it all the way to
-                 a signed sale rather than stopping at a completed form.</p>
-            </div>
-            <div data-reveal="up">
-              <p class="contact__key">What we ran</p>
-              <p>The same two-stage build — TrueView for the film, Display for
-                 persistence, a single form to capture — bought against a smaller,
-                 more tightly defined audience.</p>
-            </div>
-          </div>
-
-          <div class="case__figures" style="--figures: 4">
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="15">15</span><span class="stat__suffix">K+</span>
+              <p class="case-card__line">
+                Accelerating real estate growth through data-driven digital marketing.
               </p>
-              <p class="stat__label">Pre-registration forms</p>
-            </div>
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="5">5</span><span class="stat__suffix">M+</span>
-              </p>
-              <p class="stat__label">YouTube TrueView views</p>
-            </div>
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="20">20</span><span class="stat__suffix">M+</span>
-              </p>
-              <p class="stat__label">Google Display impressions</p>
-            </div>
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="30">30</span><span class="stat__suffix">+</span>
-              </p>
-              <p class="stat__label">Apartments sold</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <!-- ─── 03 · Halka Arz ─── -->
-      <section class="section case" aria-labelledby="case-halka-arz">
-        <div class="container">
-          <div class="section-head">
-            <span class="section-index">03</span>
-            <p class="section-label">Public offering</p>
-          </div>
+              <div class="case-card__figures">
+                <div class="stat stat--sm">
+                  <p class="stat__value">
+                    <span data-count="75">75</span><span class="stat__suffix">K+</span>
+                  </p>
+                  <p class="stat__label">Qualified lead forms</p>
+                </div>
+                <div class="stat stat--sm">
+                  <p class="stat__value">
+                    <span data-count="700">700</span><span class="stat__suffix">M+</span>
+                  </p>
+                  <p class="stat__label">Display impressions</p>
+                </div>
+              </div>
 
-          <h2 class="case__name" id="case-halka-arz" data-reveal="up">Halka Arz</h2>
+              <span class="case-card__go">
+                Read the case study
+                <svg class="btn__arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M2 14 L14 2 M6 2 h8 v8" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </span>
+            </a>
 
-          <p class="case__lead" data-reveal="up">
-            A public offering runs to a fixed date. Awareness has to arrive before the
-            book opens, and it has to arrive interested — reach that nobody acts on is
-            reach that arrived too late to matter.
-          </p>
-
-          <div class="case__aside">
-            <div data-reveal="up">
-              <p class="contact__key">The brief</p>
-              <p>Put the offering in front of a broad investor audience inside a fixed
-                 window, and be able to show that the audience engaged with it.</p>
-            </div>
-            <div data-reveal="up">
-              <p class="contact__key">What we ran</p>
-              <p>A broad-reach buy against a hard deadline, with creative and targeting
-                 judged on click-through and engagement rather than on how many people
-                 the media plan could technically reach.</p>
-            </div>
-          </div>
-
-          <div class="case__figures" style="--figures: 3">
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="75">75</span><span class="stat__suffix">M+</span>
+            <a class="case-card" href="/case-studies/artas" data-route-link data-reveal="up"
+               data-cursor-label="Read">
+              <p class="case-card__meta">
+                <span class="case-card__num">02</span>
+                <span class="case-card__sector">Residential development</span>
               </p>
-              <p class="stat__label">Ad impressions</p>
-            </div>
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="1.25" data-count-decimals="2">1.25</span><span class="stat__suffix">%</span>
+
+              <h3 class="case-card__name">Arta&#351;</h3>
+
+              <p class="case-card__line">
+                Turning digital advertising into measurable real estate results.
               </p>
-              <p class="stat__label">Click-through rate</p>
-            </div>
-            <div class="stat" data-reveal="up">
-              <p class="stat__value">
-                <span data-count="5.4" data-count-decimals="1">5.4</span><span class="stat__suffix">%</span>
+
+              <div class="case-card__figures">
+                <div class="stat stat--sm">
+                  <p class="stat__value">
+                    <span data-count="15">15</span><span class="stat__suffix">K+</span>
+                  </p>
+                  <p class="stat__label">Lead forms</p>
+                </div>
+                <div class="stat stat--sm">
+                  <p class="stat__value">
+                    <span data-count="30">30</span><span class="stat__suffix">+</span>
+                  </p>
+                  <p class="stat__label">Apartment sales</p>
+                </div>
+              </div>
+
+              <span class="case-card__go">
+                Read the case study
+                <svg class="btn__arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M2 14 L14 2 M6 2 h8 v8" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </span>
+            </a>
+
+            <a class="case-card" href="/case-studies/ipo-campaign" data-route-link data-reveal="up"
+               data-cursor-label="Read">
+              <p class="case-card__meta">
+                <span class="case-card__num">03</span>
+                <span class="case-card__sector">Public offering</span>
               </p>
-              <p class="stat__label">Engagement rate</p>
-            </div>
+
+              <h3 class="case-card__name">IPO Campaign</h3>
+
+              <p class="case-card__line">
+                Building awareness and engagement through digital advertising.
+              </p>
+
+              <div class="case-card__figures">
+                <div class="stat stat--sm">
+                  <p class="stat__value">
+                    <span data-count="75">75</span><span class="stat__suffix">M+</span>
+                  </p>
+                  <p class="stat__label">Ad impressions</p>
+                </div>
+                <div class="stat stat--sm">
+                  <p class="stat__value">
+                    <span data-count="5.4" data-count-decimals="1">5.4</span><span class="stat__suffix">%</span>
+                  </p>
+                  <p class="stat__label">Engagement rate</p>
+                </div>
+              </div>
+
+              <span class="case-card__go">
+                Read the case study
+                <svg class="btn__arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M2 14 L14 2 M6 2 h8 v8" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </span>
+            </a>
+
           </div>
         </div>
       </section>
 
-      <!-- ─── 04 · Contact CTA ─── -->
+      <!-- ─── 02 · Contact CTA ─── -->
       <section class="section contact-cta" aria-labelledby="cases-cta-title">
         <div class="container">
           <div class="section-head">
-            <span class="section-index">04</span>
+            <span class="section-index">02</span>
             <h2 class="section-label">Contact</h2>
           </div>
 

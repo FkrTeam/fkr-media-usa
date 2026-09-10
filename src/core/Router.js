@@ -1,5 +1,5 @@
 import gsap from 'gsap'
-import { qs, qsa } from '../utils/dom.js'
+import { base, qs, qsa } from '../utils/dom.js'
 import { prefersReducedMotion } from '../utils/device.js'
 import { resetScroll, scrollToHash } from '../animations/scroll.js'
 import { reportPageView } from '../utils/analytics.js'
@@ -227,7 +227,18 @@ export default class Router {
     for (const link of qsa('[data-nav-link]')) {
       const href = link.getAttribute('href')
       if (!href) continue
-      const active = normalisePath(new URL(href, location.href).pathname) === this.path
+      // A child route keeps its parent lit: /case-studies/artas is still
+      // "Case studies" as far as the navigation is concerned.
+      //
+      // Home is the exception and has to be compared exactly, because every
+      // path on the site begins with it — and on a sub-directory deploy that
+      // is `/fkr-media-usa`, not `/`, so the site root is read from the base
+      // rather than assumed.
+      const target = normalisePath(new URL(href, location.href).pathname)
+      const home = normalisePath(base())
+      const active = target === home
+        ? this.path === home
+        : this.path === target || this.path.startsWith(`${target}/`)
       link.classList.toggle('is-active', active)
       if (active) link.setAttribute('aria-current', 'page')
       else link.removeAttribute('aria-current')
