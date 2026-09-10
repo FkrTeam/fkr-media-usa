@@ -42,10 +42,10 @@ export const reviewSummary = {
 export const reviews = [
   {
     id: 'erd',
-    name: 'Sammy Jibrin',
+    name: 'Serdar Erdinc',   // spelling as supplied — confirm if it should be 'Erdinç'
     role: 'Owner',
     company: 'ERD',
-    // DRAFT — awaiting Sammy's approval or rewrite.
+    // DRAFT — awaiting Serdar's approval or rewrite.
     quote:
       'They took the time to understand how our business actually works before they proposed anything. That is rarer than it should be.',
     quotePending: false,
@@ -55,10 +55,10 @@ export const reviews = [
   },
   {
     id: 'majestic-pmc',
-    name: 'Serdar Erdinc',   // spelling as supplied — confirm if it should be 'Erdinç'
+    name: 'Sammy Jibrin',
     role: 'Principal',
     company: 'Majestic PMC',
-    // DRAFT — awaiting Serdar's approval or rewrite.
+    // DRAFT — awaiting Sammy's approval or rewrite.
     quote:
       'Strategy, design and build came from one team, so nothing was lost between them. We always knew exactly where the work stood.',
     quotePending: false,

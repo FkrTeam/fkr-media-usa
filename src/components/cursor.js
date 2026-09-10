@@ -6,8 +6,9 @@ import { CSS } from '../data/brand.js'
 /**
  * Custom cursor — desktop only, and only when the pointer is genuinely fine.
  *
- * A dot that tracks exactly and a ring that trails. Interactive elements
- * expand the ring; anything with `data-cursor-label` fills it with a word.
+ * A dot that tracks exactly, and a trailing carrier that holds the hover
+ * word. There is no drawn ring: interactive elements grow the dot, and
+ * anything with `data-cursor-label` sets the word under it instead.
  * Touch devices never see it and never pay for it.
  */
 export default class Cursor {
@@ -19,9 +20,14 @@ export default class Cursor {
     this.dot = qs('[data-cursor-dot]')
     this.ring = qs('[data-cursor-ring]')
     this.dotInner = qs('[data-cursor-dot-inner]')
-    this.ringInner = qs('[data-cursor-ring-inner]')
-    this.label = qs('[data-cursor-label]')
     if (!this.root) return
+
+    // Scoped to the cursor, and it has to be: `data-cursor-label` is also
+    // how any element on the page ASKS for a word, and the intro's own
+    // controls carry it further up the document than this span. An
+    // unscoped lookup found the Sound button instead and then wrote the
+    // hover word into it, replacing its icon and fading it out.
+    this.label = qs('[data-cursor-label]', this.root)
 
     document.documentElement.classList.add('has-cursor')
 
@@ -75,32 +81,41 @@ export default class Cursor {
     document.addEventListener('pointerenter', () => gsap.to(this.root, { opacity: 1, duration: 0.2 }))
   }
 
+  /**
+   * Nothing here touches the carrier's own box.
+   *
+   * It used to be a drawn circle that grew and took a fill on hover; with
+   * the circle gone, a background or a border on it would paint a rectangle
+   * and a scale would stretch the word. All the feedback lives on the dot
+   * and on the label now.
+   *
+   * The dot GROWS rather than shrinks, which is the opposite of what it did
+   * while there was a ring around it to expand instead. Over a labelled
+   * element it stays small but never disappears — the visitor still has to
+   * be able to aim, and a floating word is not a pointer.
+   */
   _expand(label) {
-    gsap.to(this.ringInner, {
-      scale: label ? 1.75 : 1.4,
-      backgroundColor: label ? CSS.brandSoft : CSS.neutralSoft,
-      borderColor: label ? CSS.brand : CSS.brandBorder,
-      duration: 0.4,
+    gsap.to(this.dotInner, {
+      scale: label ? 0.6 : 1.9,
+      backgroundColor: label ? CSS.brand : CSS.paper,
+      duration: 0.35,
       ease: 'power3.out'
     })
-    gsap.to(this.dotInner, { scale: label ? 0 : 0.5, duration: 0.3, ease: 'power3.out' })
 
     if (this.label) {
-      this.label.style.color = label ? CSS.brand : CSS.paper
+      this.label.style.color = CSS.brand
       this.label.textContent = label ?? ''
       gsap.to(this.label, { opacity: label ? 1 : 0, duration: 0.25, ease: 'power2.out' })
     }
   }
 
   _reset() {
-    gsap.to(this.ringInner, {
+    gsap.to(this.dotInner, {
       scale: 1,
-      backgroundColor: CSS.transparent,
-      borderColor: CSS.neutralBorder,
-      duration: 0.45,
+      backgroundColor: CSS.paper,
+      duration: 0.4,
       ease: 'power3.out'
     })
-    gsap.to(this.dotInner, { scale: 1, duration: 0.3, ease: 'power3.out' })
     if (this.label) gsap.to(this.label, { opacity: 0, duration: 0.2 })
   }
 
