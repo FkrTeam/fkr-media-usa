@@ -1,5 +1,5 @@
 /* =========================================================
-   COMPONENTS — buttons, links, cursor, marquee, media
+   COMPONENTS — buttons, links, marquee, media
    ========================================================= */
 
 /* ---- Primary CTA: engineered slab, magnetic on desktop ---- */
@@ -94,94 +94,6 @@
   transform: scaleX(1);
   transform-origin: left;
 }
-
-/* ---- Custom cursor (pointer-fine devices only) ----
-   Position lives on the wrapper, scale/colour on the inner shape, so the
-   trailing transform and the hover animation never fight over one property. */
-.cursor {
-  position: fixed;
-  top: 0; left: 0;
-  z-index: var(--z-cursor);
-  pointer-events: none;
-  display: none;
-  /* Deliberately NOT mix-blend-mode: difference — differencing white
-     against the brand red would invert it straight back to cyan. The
-     cursor states its own colour instead. */
-}
-
-.cursor__dot,
-.cursor__ring {
-  position: absolute;
-  top: 0; left: 0;
-  will-change: transform;
-}
-
-/* Both shapes carry a faint dark halo so the cursor still reads on the
-   bright frames of the intro film, not only on the near-black page. */
-.cursor__dot-inner {
-  width: 8px; height: 8px;
-  margin: -4px 0 0 -4px;
-  border-radius: 50%;
-  background: var(--fg);
-  box-shadow: 0 0 0 1px rgba(5, 5, 5, 0.45);
-}
-
-/* The ring is a carrier, not a shape.
-   There used to be a drawn circle here and it is gone on purpose — but the
-   element stays, because it is what trails behind the dot and what holds the
-   hover word. Sized and centred, drawing nothing. */
-.cursor__ring-inner {
-  width: 44px; height: 44px;
-  margin: -22px 0 0 -22px;
-  display: grid;
-  place-items: center;
-}
-
-/* With no ring to sit inside, the word carries itself: it is set a little
-   larger than it was, and it keeps the dark halo the shapes used to have so
-   it still reads against a bright frame of the film. */
-.cursor__label {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--fg);
-  opacity: 0;
-  white-space: nowrap;
-  text-shadow: 0 1px 4px rgba(5, 5, 5, 0.8);
-  /* Under the pointer, not on it: the carrier is centred on the cursor, so
-     the word is pushed to its lower edge and clear of the dot. */
-  align-self: end;
-  transform: translateY(9px);
-}
-
-html.has-cursor .cursor { display: block; }
-
-/* ---- The cursor over the intro film ----
-   The page is near-black, so a small light dot reads perfectly against it.
-   The film is not: it cuts to a near-white studio, to water, to daylight,
-   and against those frames a dot with a hairline halo simply disappears —
-   which matters more here than anywhere else on the site, because the only
-   two things a visitor can do during the film are click Sound or click Skip,
-   and they cannot aim at a cursor they cannot see. While the film is up the
-   dot gets a real outline and a cast shadow, so it holds against any frame
-   instead of only against the dark ones. */
-html.is-intro .cursor__dot-inner {
-  width: 10px;
-  height: 10px;
-  margin: -5px 0 0 -5px;
-  box-shadow:
-    0 0 0 1.5px rgba(5, 5, 5, 0.62),
-    0 1px 6px rgba(5, 5, 5, 0.5);
-}
-
-html.is-intro .cursor__label {
-  text-shadow: 0 1px 4px rgba(5, 5, 5, 0.85);
-}
-html.has-cursor,
-html.has-cursor a,
-html.has-cursor button { cursor: none; }
 
 /* ---- Arrow link ---- */
 .link--arrow {

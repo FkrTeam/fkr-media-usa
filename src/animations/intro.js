@@ -94,9 +94,6 @@ export default class Intro {
       }
 
       this.root?.removeAttribute('hidden')
-      // Lets the cursor know it is over film rather than over the page —
-      // see `html.is-intro .cursor` in styles/components.css.
-      document.documentElement.classList.add('is-intro')
       gsap.to(this.root, { opacity: 1, duration: 0.6, ease: 'power2.out' })
 
       this._bind()
@@ -207,8 +204,6 @@ export default class Intro {
     this.soundBtn.classList.toggle('is-muted', muted)
     this.soundBtn.setAttribute('aria-pressed', muted ? 'true' : 'false')
     this.soundBtn.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off')
-    // The custom cursor fills with this word on hover — see components/cursor.js.
-    this.soundBtn.setAttribute('data-cursor-label', muted ? 'Unmute' : 'Mute')
     if (this.soundLabel) this.soundLabel.textContent = muted ? 'Sound off' : 'Sound on'
   }
 
@@ -401,8 +396,6 @@ export default class Intro {
   }
 
   _skip() {
-    document.documentElement.classList.remove('is-intro')
-
     if (this.finished) return
     this._handoff({ immediate: false })
   }

@@ -15,7 +15,7 @@ import ContactForm from '../components/contactForm.js'
  * page-scoped lives here so a route change cannot leave a ScrollTrigger, a
  * tween or a listener pointing at a detached node.
  *
- * The shell — renderer, render loop, cursor, navigation, menu, footer — is
+ * The shell — renderer, render loop, navigation, menu, footer — is
  * outside this file and is never rebuilt.
  */
 

@@ -2,7 +2,7 @@
  * Device capability detection.
  *
  * Everything expensive in this build is gated on the values here: particle
- * counts, post-processing, the custom cursor, which intro film is fetched
+ * counts, post-processing, the magnetic buttons, which intro film is fetched
  * and how hard the render loop is allowed to work.
  */
 
@@ -23,7 +23,7 @@ export function supportsWebGL() {
 
 export const prefersReducedMotion = () => mq('(prefers-reduced-motion: reduce)').matches
 
-/** Fine pointer + hover: the only place a custom cursor belongs. */
+/** Fine pointer + hover: the only place a pointer-led flourish belongs. */
 export const hasFinePointer = () => mq('(hover: hover) and (pointer: fine)').matches
 
 export const isTouch = () => mq('(hover: none)').matches || navigator.maxTouchPoints > 0

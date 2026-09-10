@@ -15,7 +15,6 @@ import Experience from './Experience.js'
 import Router from './Router.js'
 import { renderIntroSources } from '../components/render.js'
 import Preloader from '../components/preloader.js'
-import Cursor from '../components/cursor.js'
 import Menu from '../components/menu.js'
 import { initNavigation } from '../animations/navigation.js'
 import { mountPage, unmountPage } from '../animations/page.js'
@@ -28,8 +27,8 @@ import Intro from '../animations/intro.js'
  * Owns the boot sequence and the split between what is built once and what
  * is rebuilt per route.
  *
- *   SHELL (once per session)   renderer, render loop, cursor, navigation,
- *                              menu, footer, router, intro film
+ *   SHELL (once per session)   renderer, render loop, navigation, menu,
+ *                              footer, router, intro film
  *   PAGE  (per route)          content, splits, ScrollTriggers, components
  *
  * Staged loading:
@@ -66,7 +65,6 @@ export default class App {
     this.preloader = new Preloader({ reducedMotion: this.reducedMotion })
     this.preloader.label('Fonts')
 
-    this.cursor = new Cursor()
     this.menu = new Menu({ reducedMotion: this.reducedMotion })
 
     // 2 · The WebGL world, if this device can have one.
@@ -131,7 +129,6 @@ export default class App {
     if (this.tier === 'none' || !this.canvas) {
       document.documentElement.classList.add('no-webgl')
       console.info('[fkr] WebGL unavailable — running the static visual fallback')
-      this._startCursorLoop()
       return
     }
 
@@ -141,9 +138,6 @@ export default class App {
         tier: this.tier,
         reducedMotion: this.reducedMotion
       })
-
-      // The cursor rides the same loop as everything else.
-      this.experience.time.on('tick', (delta) => this.cursor?.update(delta))
 
       // A lost context must not take the page with it.
       this.canvas.addEventListener('webglcontextlost', (event) => {
@@ -155,31 +149,7 @@ export default class App {
       console.warn('[fkr] WebGL init failed', error)
       document.documentElement.classList.add('no-webgl')
       this.experience = null
-      this._startCursorLoop()
     }
-  }
-
-  /**
-   * Without an Experience there is no render loop, so the cursor needs its
-   * own — the only place in the app with a second requestAnimationFrame.
-   */
-  _startCursorLoop() {
-    if (!this.cursor?.enabled) return
-
-    let last = performance.now()
-    const frame = (now) => {
-      const delta = Math.min((now - last) / 1000, 1 / 20)
-      last = now
-      this.cursor.update(delta)
-      if (document.visibilityState !== 'hidden') requestAnimationFrame(frame)
-    }
-    requestAnimationFrame(frame)
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        last = performance.now()
-        requestAnimationFrame(frame)
-      }
-    })
   }
 
   /** Stage 0 — fonts and the critical shell. */
