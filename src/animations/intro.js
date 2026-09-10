@@ -11,6 +11,7 @@ const SOUND_KEY = 'fkr:introSound'
 const SKIP_DELAY = 2.5      // seconds before the skip control appears
 const PREWARM_LEAD = 5      // seconds before the end that the hero warms up
 const VIDEO_TIMEOUT = 9000  // give up waiting for the film after this
+const ARM_TIMEOUT = 15000   // how long the film waits for that tap before moving on
 
 /**
  * The opening.
@@ -31,6 +32,7 @@ export default class Intro {
     this.video = qs('[data-intro-video]')
     this.skipBtn = qs('[data-intro-skip]')
     this.soundBtn = qs('[data-intro-sound]')
+    this.startBtn = qs('[data-intro-start]')
     this.soundLabel = qs('[data-intro-sound-label]')
     this.timer = qs('[data-intro-timer]')
     this.progress = qs('[data-intro-progress]')
@@ -150,7 +152,8 @@ export default class Intro {
 
     try {
       await video.play()
-    } catch {
+    } catch (first) {
+      this._playError = first
       if (!video.muted) {
         blocked = true
         video.muted = true
@@ -158,6 +161,7 @@ export default class Intro {
           await video.play()
         } catch (error) {
           console.warn('[intro] autoplay blocked or source unplayable', error)
+          this._playError = error
           clearTimeout(failsafe)
           this._recover('play')
           return
@@ -245,7 +249,15 @@ export default class Intro {
   _recover(reason) {
     const video = this.video
     if (this.finished || this._fallbackRunning || this._playing) return
-    if (!video || this._recovering) return this._runFallback()
+    if (!video) return this._runFallback()
+
+    // A refusal is not a broken file. Safari in Low Power Mode declines every
+    // autoplay, muted included, and asking again on the other source only
+    // gets declined again — so hand the decision to the visitor instead of
+    // spending the H.264 retry on a question that was never about codecs.
+    if (this._playError?.name === 'NotAllowedError') return this._arm()
+
+    if (this._recovering) return this._runFallback()
 
     const mp4 = Array.from(video.querySelectorAll('source'))
       .find((source) => (source.type || '').startsWith('video/mp4'))
@@ -261,12 +273,105 @@ export default class Intro {
     this._startFilm()
   }
 
+  /**
+   * Waits, behind the poster frame, for the tap the browser is holding out for.
+   *
+   * A MacBook in Low Power Mode is the case this exists for: Safari there
+   * refuses to start ANY film on its own — muted, `playsinline`, however
+   * small — and there is no attribute, encoding or API that opens that gate.
+   * Only a real user gesture does. Until this existed the refusal was read as
+   * "no film", and every Low Power visitor got the title sequence instead of
+   * the thing FKR paid to have made.
+   *
+   * So the film is shown stopped on its own first frame with one control over
+   * it, and play() is called from inside the click — where the gesture is
+   * still live and the browser allows it. Twelve seconds without an answer
+   * and the title sequence runs after all: a visitor who is not going to tap
+   * must not be left holding a still frame.
+   */
+  _arm() {
+    const video = this.video
+    if (this.finished || this._fallbackRunning || this._armed) return this._runFallback()
+    if (!this.startBtn || !video) return this._runFallback()
+
+    this._armed = true
+    clearTimeout(this._failsafe)
+    console.info('[intro] autoplay refused — waiting for the visitor to start the film')
+
+    // The poster is already on the element; showing it is the whole point.
+    video.classList.add('is-armed')
+    this.startBtn.hidden = false
+
+    // Reading offsetWidth flushes the display change, so the browser has a
+    // `display: grid` at opacity 0 to transition FROM. Without it the class
+    // lands in the same frame as the unhide and the fade never runs — and a
+    // timer would be worse: this control has to appear whether or not the
+    // page is being painted.
+    void this.startBtn.offsetWidth
+    this.startBtn.classList.add('is-visible')
+
+    this._giveUp = setTimeout(() => {
+      this._disarm()
+      this._runFallback()
+    }, ARM_TIMEOUT)
+
+    const start = async () => {
+      if (this.finished || this._fallbackRunning) return
+      this._disarm()
+
+      // Called from inside the gesture, which is the only reason it works.
+      video.muted = Intro.soundOff
+      video.volume = 1
+
+      let blocked = false
+      try {
+        await video.play()
+      } catch {
+        blocked = true
+        video.muted = true
+        try {
+          await video.play()
+        } catch (error) {
+          console.warn('[intro] the film was refused even on a gesture', error)
+          this._runFallback()
+          return
+        }
+      }
+
+      this._playing = true
+      video.classList.add('is-playing')
+      this._syncSound()
+      if (blocked) this.soundBtn?.classList.add('is-blocked')
+    }
+
+    this._startHandler = start
+    this.startBtn.addEventListener('click', start)
+  }
+
+  /** Takes the start control away again, whichever way the wait ended. */
+  _disarm() {
+    clearTimeout(this._giveUp)
+    this.video?.classList.remove('is-armed')
+    if (!this.startBtn) return
+
+    // Removed, not just hidden: after the wait has ended one way or another
+    // this control must be inert, or a late click restarts a film the
+    // visitor has already been moved past.
+    if (this._startHandler) {
+      this.startBtn.removeEventListener('click', this._startHandler)
+      this._startHandler = null
+    }
+    this.startBtn.classList.remove('is-visible')
+    this.startBtn.hidden = true
+  }
+
   /** Generated title sequence — the film's stand-in, not a dead end. */
   _runFallback() {
     if (this.finished || this._fallbackRunning) return
     this._fallbackRunning = true
     this._playing = true
 
+    this._disarm()
     this.root?.classList.add('is-fallback')
     this.video?.classList.remove('is-playing')
     this.onPrewarm()
@@ -312,6 +417,7 @@ export default class Intro {
     Intro.markSeen()
     document.removeEventListener('keydown', this._onKey ?? (() => {}))
     this.skipBtn?.classList.remove('is-visible')
+    this._disarm()
 
     const { experience } = this
     const d = this.reducedMotion ? 0.01 : 1

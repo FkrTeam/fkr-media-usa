@@ -62,6 +62,11 @@
 }
 .intro__video.is-playing { opacity: 1; }
 
+/* Armed: the film is loaded and paused on its poster, waiting for the tap
+   the browser is holding out for. Same opacity as playing — the visitor is
+   looking at the first frame of the film, not at a black hole. */
+.intro__video.is-armed { opacity: 1; }
+
 /* Vignette + scanline grade keeps the film inside the brand world */
 .intro__grade {
   position: absolute;
@@ -74,6 +79,9 @@
 
 .intro__hud {
   position: absolute;
+  /* Above .intro__start, which covers the frame while the film waits for a
+     tap — Skip and Sound have to stay reachable through that wait. */
+  z-index: 3;
   inset: auto var(--gutter) clamp(1.5rem, 4vh, 3rem) var(--gutter);
   display: flex;
   align-items: flex-end;
@@ -89,6 +97,7 @@
 
 .intro__progress {
   position: absolute;
+  z-index: 3;
   left: var(--gutter);
   right: var(--gutter);
   bottom: clamp(0.75rem, 2.4vh, 1.5rem);
@@ -218,6 +227,66 @@
   letter-spacing: 0.08em;
   border: 1px solid rgba(244, 242, 239, 0.22);
   color: rgba(244, 242, 239, 0.6);
+}
+
+/* The tap the browser is waiting for — see .intro__video.is-armed */
+.intro__start {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: none;
+  place-items: center;
+  align-content: center;
+  gap: var(--sp-4);
+  width: 100%;
+  padding: var(--gutter);
+  background: transparent;
+  border: 0;
+  color: var(--fg);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--d-cine) var(--e-out);
+}
+.intro__start:not([hidden]) { display: grid; }
+.intro__start.is-visible { opacity: 1; }
+
+.intro__start-icon {
+  display: grid;
+  place-items: center;
+  width: clamp(3.5rem, 8vw, 5rem);
+  aspect-ratio: 1;
+  margin-inline: auto;
+  border: 1px solid rgba(244, 242, 239, 0.5);
+  border-radius: 50%;
+  background: rgba(5, 5, 5, 0.42);
+  transition: border-color var(--d-fast) var(--e-out), background var(--d-fast) var(--e-out);
+}
+.intro__start-icon svg { width: 42%; height: 42%; }
+
+.intro__start:hover .intro__start-icon,
+.intro__start:focus-visible .intro__start-icon {
+  border-color: var(--brand);
+  background: rgba(5, 5, 5, 0.62);
+}
+.intro__start:focus-visible { outline: 2px solid var(--brand); outline-offset: -4px; }
+
+.intro__start-text { display: grid; gap: var(--sp-2); }
+
+.intro__start-label {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 2.4vw, 1.5rem);
+  letter-spacing: var(--tr-tight);
+}
+
+.intro__start-note {
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: rgba(244, 242, 239, 0.6);
+  max-width: 34ch;
+  margin-inline: auto;
 }
 
 /* Fallback title sequence when no film asset is available */

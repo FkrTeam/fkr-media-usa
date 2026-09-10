@@ -100,6 +100,24 @@
       <p class="intro__fallback-line" data-intro-fallback-line></p>
     </div>
 
+    <!-- Shown only when the browser refuses to start the film by itself.
+         Safari in Low Power Mode blocks every autoplay, muted included, and
+         no attribute or encoding gets around it — a tap is the only key. So
+         the film waits behind its poster frame and asks for one rather than
+         giving the visitor the title sequence. src/animations/intro.js, _arm(). -->
+    <button class="intro__start" type="button" data-intro-start hidden
+            data-cursor-label="Play">
+      <span class="intro__start-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M9 6.5 17.5 12 9 17.5z" fill="currentColor" />
+        </svg>
+      </span>
+      <span class="intro__start-text">
+        <span class="intro__start-label">Play the film</span>
+        <span class="intro__start-note">This browser needs a tap before it will start one</span>
+      </span>
+    </button>
+
     <div class="intro__hud">
       <span class="intro__timer" data-intro-timer>00:00 / 00:38</span>
 
