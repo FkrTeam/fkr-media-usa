@@ -120,14 +120,20 @@ export default class Intro {
     const video = this.video
 
     // Nothing about the film may block the experience: if it has not
-    // reported itself playable in time, move on with the title sequence.
+    // reported itself playable in time, drop to the H.264 cut, and failing
+    // that to the title sequence.
     const failsafe = setTimeout(() => {
-      if (!this._playing) this._runFallback()
+      if (!this._playing) this._recover('timeout')
     }, VIDEO_TIMEOUT)
+    this._failsafe = failsafe
 
-    video.addEventListener('timeupdate', () => this._onTime(), { passive: true })
-    video.addEventListener('ended', () => this._skip(), { once: true })
-    video.addEventListener('error', () => this._runFallback(), { once: true })
+    // Bound once: _recover() calls straight back into here with the MP4.
+    if (!this._bound) {
+      this._bound = true
+      video.addEventListener('timeupdate', () => this._onTime(), { passive: true })
+      video.addEventListener('ended', () => this._skip(), { once: true })
+      video.addEventListener('error', () => this._recover('error'))
+    }
 
     video.load()
 
@@ -153,12 +159,12 @@ export default class Intro {
         } catch (error) {
           console.warn('[intro] autoplay blocked or source unplayable', error)
           clearTimeout(failsafe)
-          this._runFallback()
+          this._recover('play')
           return
         }
       } else {
         clearTimeout(failsafe)
-        this._runFallback()
+        this._recover('play')
         return
       }
     }
@@ -220,6 +226,39 @@ export default class Intro {
       this._prewarmed = true
       this.onPrewarm()
     }
+  }
+
+  /**
+   * One retry on H.264 before the film is given up on.
+   *
+   * Source selection is a one-way door: once a browser has committed to a
+   * <source> it will not walk back to the next one, and a decode that fails
+   * or a stream that stalls AFTER that point ends the element for good. That
+   * is exactly what Safari does with the VP9/Opus WebM listed first — it
+   * answers canPlayType for WebM, takes it, and then fails, so the visitor
+   * gets the title sequence on a Mac while every other browser gets the film.
+   *
+   * So when the film dies for any reason, the MP4 that was sitting unused in
+   * the source list is tried once, on its own, as a plain src. Only if that
+   * also fails does the title sequence run.
+   */
+  _recover(reason) {
+    const video = this.video
+    if (this.finished || this._fallbackRunning || this._playing) return
+    if (!video || this._recovering) return this._runFallback()
+
+    const mp4 = Array.from(video.querySelectorAll('source'))
+      .find((source) => (source.type || '').startsWith('video/mp4'))
+
+    if (!mp4?.src) return this._runFallback()
+
+    console.warn(`[intro] film ${reason}; retrying on H.264`)
+    this._recovering = true
+    clearTimeout(this._failsafe)
+
+    video.querySelectorAll('source').forEach((source) => source.remove())
+    video.src = mp4.src
+    this._startFilm()
   }
 
   /** Generated title sequence — the film's stand-in, not a dead end. */

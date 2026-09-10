@@ -96,19 +96,28 @@ export const siteData = {
      landscape master, `mobile` the 900×1300 portrait one. Within a cut the
      sources are tried in order; the first that plays wins. If none load,
      the experience falls through to a generated title sequence.
+
+     The `codecs` parameters are not decoration. Given a bare `video/webm`
+     Safari answers "maybe", takes the WebM, and only then discovers it
+     cannot carry the stream — and source selection is a one-way door, so
+     the visitor gets the title sequence instead of the film. Spelled out,
+     canPlayType can refuse honestly and the H.264 cut below is reached.
+     Both strings must match what scripts/encode-intro.sh actually writes:
+     VP9 profile 0 with Opus, and H.264 High (avc1.6400xx, where xx is the
+     level in hex — 29 for 4.1, 28 for 4.0) with AAC-LC.
      scripts/encode-intro.sh writes every file named here. */
   intro: {
     desktop: {
       sources: [
-        { src: 'media/intro-desktop.webm', type: 'video/webm' },
-        { src: 'media/intro-desktop.mp4', type: 'video/mp4' }
+        { src: 'media/intro-desktop.webm', type: 'video/webm; codecs="vp9, opus"' },
+        { src: 'media/intro-desktop.mp4', type: 'video/mp4; codecs="avc1.640029, mp4a.40.2"' }
       ],
       poster: 'media/intro-poster.jpg'
     },
     mobile: {
       sources: [
-        { src: 'media/intro-mobile.webm', type: 'video/webm' },
-        { src: 'media/intro-mobile.mp4', type: 'video/mp4' }
+        { src: 'media/intro-mobile.webm', type: 'video/webm; codecs="vp9, opus"' },
+        { src: 'media/intro-mobile.mp4', type: 'video/mp4; codecs="avc1.640028, mp4a.40.2"' }
       ],
       poster: 'media/intro-poster-mobile.jpg'
     },
