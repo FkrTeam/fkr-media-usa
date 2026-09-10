@@ -79,6 +79,7 @@ export default defineConfig(({ mode }) => {
         caseBizimEvler: resolve(__dirname, 'case-studies/bizim-evler/index.html'),
         caseArtas: resolve(__dirname, 'case-studies/artas/index.html'),
         caseIpo: resolve(__dirname, 'case-studies/ipo-campaign/index.html'),
+        caseGedikPilic: resolve(__dirname, 'case-studies/gedik-pilic/index.html'),
         about: resolve(__dirname, 'about/index.html'),
         contact: resolve(__dirname, 'contact/index.html')
       },

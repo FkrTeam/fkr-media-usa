@@ -403,6 +403,11 @@
 
 .stat__suffix { color: var(--brand); }
 
+/* A leading sign, for the one figure that is a DIFFERENCE rather than a
+   total: `+900` followers gained, where every other figure here uses a
+   trailing `+` to mean "at least". Same red, opposite end of the number. */
+.stat__prefix { color: var(--brand); }
+
 /* A placeholder figure is visibly a placeholder — it is dimmer than a real
    one and it never animates. */
 .stat--placeholder .stat__value { color: var(--fg-faint); }
